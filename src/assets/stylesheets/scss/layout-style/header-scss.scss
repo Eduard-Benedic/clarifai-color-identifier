@@ -1,0 +1,29 @@
+
+.header {
+    background-color: $main-shade;
+    &__wrapper {
+        max-width: 93.75rem;
+        padding: 1rem 1.5rem;
+    }
+}
+.nav {
+
+    &__wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    &__item {
+        display: inline-block;
+        
+        &:not(:last-child) {
+            margin-right: 20px;
+        }
+    }
+
+    &__link {   
+        color: $white-shade;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+}

@@ -1,0 +1,28 @@
+.pd-tb {
+
+    &--sm {
+        padding-top: .7rem;
+        padding-bottom: .7rem;
+    }
+
+    &--md {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+    &--lg {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    &--xl {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    &--2xl {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+    }
+}
+
