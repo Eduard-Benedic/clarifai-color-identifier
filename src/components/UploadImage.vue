@@ -2,7 +2,7 @@
   <div class="section">
     <div class="wrapper">
       <h2 class="title">Upload image here</h2>
-      <div class="flex pd-tb--lg">
+      <div class="flex flex-wrap flex-center pd-tb--lg">
         <color-viewer v-for="(color,index) in colorPalette" :key="index" :color="color"></color-viewer>
       </div>
     </div>

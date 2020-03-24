@@ -9,6 +9,14 @@
     display: flex;
 }
 
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-center {
+    justify-content: center;
+}
+
 .gap4 {
     grid-gap: 2rem 3rem;
 }
