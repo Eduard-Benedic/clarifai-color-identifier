@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <header-section></header-section>
-    <upload-image></upload-image>
+    <viewer-section></viewer-section>
   </div>
 </template>
 
 <script>
 import HeaderSection from "./components/layout/HeaderSection";
-import UploadImage from "./components/UploadImage";
+import ViewerSection from "./components/ViewerSection";
 export default {
   name: "App",
   components: {
     HeaderSection,
-    UploadImage
+    ViewerSection
   }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="section">
     <div class="wrapper">
-      <h2 class="title">Upload image here</h2>
+      <upload-section></upload-section>
       <div class="flex flex-wrap flex-center pd-tb--lg">
         <color-viewer v-for="(color,index) in colorPalette" :key="index" :color="color"></color-viewer>
       </div>
@@ -11,11 +11,13 @@
 
 <script>
 import ColorViewer from "./ColorViewer";
+import UploadSection from "./UploadSection";
 import Clarifai from "clarifai";
 export default {
-  name: "UploadImage",
+  name: "ViewerSection",
   components: {
-    ColorViewer
+    ColorViewer,
+    UploadSection
   },
   data() {
     return {
@@ -43,9 +45,4 @@ export default {
 </script>
 
 <style lang="scss">
-.title {
-  font-size: $font-2xl;
-  color: $black;
-  text-align: center;
-}
 </style>
