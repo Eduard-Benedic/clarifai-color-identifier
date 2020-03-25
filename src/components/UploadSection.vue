@@ -2,14 +2,24 @@
   <div class="uploader pd-tb--lg">
     <div class="uploader__wrapper">
       <h2 class="uploader__title">Upload image here</h2>
-      <input class="uploader__input" type="file" />
-      <button class="uploader__btn">Search color composition</button>
+      <form @submit.prevent="fetchTheme($event,'https://samples.clarifai.com/metro-north.jpg')">
+        <input class="uploader__input" name="themeColor" id="themeColor" type="input" />
+        <button class="uploader__btn">Search color composition</button>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  name: "UploadSection",
+  methods: {
+    fetchTheme($event, urlStr) {
+      urlStr = $event.target.elements[0].value;
+      this.$store.dispatch("getColorTheme", urlStr);
+    }
+  }
+};
 </script>
 
 <style lang="scss">
