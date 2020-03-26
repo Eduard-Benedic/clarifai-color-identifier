@@ -16,16 +16,14 @@
     </div>
   </div>
 </template>
-
 <script>
-import ColorViewer from "./ColorViewer";
-import UploadSection from "./UploadSection";
-
+import UploadSection from "../components/UploadSection.vue";
+import ColorViewer from "../components/ColorViewer.vue";
 export default {
-  name: "ViewerSection",
+  name: "Home",
   components: {
-    ColorViewer,
-    UploadSection
+    UploadSection,
+    ColorViewer
   },
   computed: {
     imageLink() {

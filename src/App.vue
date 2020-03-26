@@ -1,21 +1,18 @@
 <template>
   <div id="app">
     <header-section></header-section>
-    <viewer-section></viewer-section>
+    <router-view :key="$route.path" />
   </div>
 </template>
 
 <script>
 import HeaderSection from "./components/layout/HeaderSection";
-import ViewerSection from "./components/ViewerSection";
 export default {
   name: "App",
   components: {
-    HeaderSection,
-    ViewerSection
+    HeaderSection
   }
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

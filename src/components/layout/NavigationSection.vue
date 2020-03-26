@@ -3,10 +3,10 @@
     <div class="nav__wrapper">
       <ul class="nav__list">
         <li class="nav__item">
-          <a href="/" class="nav__link">Home</a>
+          <router-link to="/">Home </router-link>
         </li>
         <li class="nav__item">
-          <a href="/" class="nav__link">About</a>
+          <router-link to="/about">About</router-link>
         </li>
       </ul>
       <ul class="nav__list">
@@ -27,5 +27,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>
