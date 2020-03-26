@@ -1,7 +1,7 @@
 <template>
   <main class="section">
     <section class="wrapper">
-      <h1>Find your favourite color palette</h1>
+      <h1 class="h">Find your favourite color palette</h1>
       <p>
         Even wondering how would you be able to get your favourite colors out of
         a picture?
@@ -19,16 +19,23 @@
         Read the following instructions to understand what is this app all about
       </p>
       <ul>
-        <li>Paste an URL image and click the Search button</li>
         <li>
+          <font-awesome-icon :icon="['fa', 'circle']" /> Paste an URL image and
+          click the Search button
+        </li>
+        <li>
+          <font-awesome-icon :icon="['fa', 'circle']" />
           Copy the colors by hovering over your favourite color. An image
           preview of your input image will be added uptop
         </li>
         <li>
+          <font-awesome-icon :icon="['fa', 'circle']" />
           For a better experience, sign up at our website. Doing so will allow
           you to save your favourite colors and draw patterns
         </li>
-        <li>None the less !Enjoy</li>
+        <li>
+          <font-awesome-icon :icon="['fa', 'circle']" />None the less !Enjoy
+        </li>
       </ul>
     </section>
   </main>
@@ -40,4 +47,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+li {
+  margin-bottom: 1.2rem;
+}
+
+svg {
+  color: $second-color;
+  max-width: 0.6rem;
+  margin-right: 0.6rem;
+}
+</style>

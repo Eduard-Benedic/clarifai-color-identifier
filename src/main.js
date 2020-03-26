@@ -5,10 +5,10 @@ import store from "./store/index";
 import VueClipboard from "vue-clipboard2";
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faLink, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faSearch, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faLink, faSearch);
+library.add(faLink, faSearch, faCircle);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.use(VueClipboard);

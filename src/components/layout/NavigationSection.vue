@@ -3,10 +3,10 @@
     <div class="nav__wrapper">
       <ul class="nav__list">
         <li class="nav__item">
-          <router-link to="/">Home </router-link>
+          <router-link to="/" class="nav__link">Home </router-link>
         </li>
         <li class="nav__item">
-          <router-link to="/about">About</router-link>
+          <router-link to="/about" class="nav__link">About</router-link>
         </li>
       </ul>
       <ul class="nav__list">
