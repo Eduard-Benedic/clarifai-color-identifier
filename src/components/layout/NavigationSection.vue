@@ -11,10 +11,10 @@
       </ul>
       <ul class="nav__list">
         <li class="nav__item">
-          <a href="/" class="nav__link">Login</a>
+          <router-link to="/login" class="nav__link">Login</router-link>
         </li>
         <li class="nav__item">
-          <a href="/" class="nav__link">Signup</a>
+          <router-link to="/signup" class="nav__link">Signup</router-link>
         </li>
       </ul>
     </div>

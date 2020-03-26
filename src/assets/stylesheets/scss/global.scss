@@ -2,39 +2,37 @@
 @import "abstract/variables";
 @import "abstract/grids";
 @import "utilities/utilities";
-@import url('https://fonts.googleapis.com/css?family=Gotu&display=swap');
-
-
-
+@import url("https://fonts.googleapis.com/css?family=Gotu&display=swap");
 
 body {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Gotu', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Gotu", sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
 ul {
-    list-style: none;
-    text-decoration: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
 }
-
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
-
 
 .section {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 
-
 .wrapper {
-    max-width: 93.75rem;
-    margin: 0 auto;
-    width: 100%;
+  max-width: 93.75rem;
+  margin: 0 auto;
+  padding: 0 1.75rem;
+  width: 100%;
 }
