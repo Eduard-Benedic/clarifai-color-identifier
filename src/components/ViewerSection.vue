@@ -7,24 +7,20 @@
         <img class="img-preview__img" :src="imageLink" alt />
       </div>
       <div class="flex flex-wrap flex-center pd-tb--lg">
-        <color-viewer
-          v-for="(color, index) in this.$store.state.theme"
-          :key="index"
-          :color="color"
-        ></color-viewer>
+        <color-theme v-for="(color, index) in this.$store.state.theme" :key="index" :color="color"></color-theme>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ColorViewer from "./ColorViewer";
+import ColorTheme from "./ColorTheme.vue";
 import UploadSection from "./UploadSection";
 
 export default {
   name: "ViewerSection",
   components: {
-    ColorViewer,
+    ColorTheme,
     UploadSection
   },
   computed: {

@@ -4,11 +4,17 @@ import Clarifai from "clarifai";
 import axios from "axios";
 
 Vue.use(Vuex);
+function directApi(route) {
+  const api = "http://localhost:9000";
+  return `${api}/${route}`;
+}
 
 export default new Vuex.Store({
   state: {
     theme: [],
-    imageLink: ""
+    imageLink: "",
+    logged: false,
+    userProfile: []
   },
   mutations: {
     GET_COLOR_THEME(state, payload) {
@@ -18,16 +24,22 @@ export default new Vuex.Store({
       state.imageLink = payload;
     },
     REGISTER_USER(state, payload) {
-      const url = "http://localhost:9000/profile";
       console.log(payload);
       axios
-        .post(url, payload)
+        .post(directApi("user"), payload)
         .then(function(response) {
           console.log(response);
         })
         .catch(function(error) {
           console.log(error);
         });
+    },
+    VERIFY_AUTHENTICATION(state, payload) {
+      console.log(payload);
+      state.logged = payload;
+    },
+    SAVE_COLOR(state, payload) {
+      state.userProfile = payload;
     }
   },
   actions: {
@@ -51,6 +63,29 @@ export default new Vuex.Store({
     },
     registerUser({ commit }, payload) {
       commit("REGISTER_USER", payload);
+    },
+    verifyAuthentication({ commit }, payload) {
+      axios
+        .post(directApi("user/login"), payload)
+        .then(res => {
+          const confirmation = res.data.logged;
+          console.log(res);
+          commit("VERIFY_AUTHENTICATION", confirmation);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    saveColor({ commit }, payload) {
+      axios
+        .post(directApi("user/color"), payload)
+        .then(res => {
+          console.log(res);
+          commit("SAVE_COLOR", payload);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 });

@@ -9,12 +9,12 @@ var port = 9000;
 
 //==== ROUTES =====
 
-const profileRoutes = require("./routes/profile");
+const userRoutes = require("./routes/user");
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use("/profile", profileRoutes);
+app.use("/user", userRoutes);
 app.get("/", (req, res, next) => {
   res.send("<h1>Whatsap </h1>");
 });

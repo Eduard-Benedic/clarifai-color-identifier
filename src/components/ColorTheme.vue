@@ -10,7 +10,6 @@
 
     <div class="colorTheme__controller">
       <input class="colorTheme__input" type="text" v-model="message" />
-
       <div class="colorTheme__copy">
         <svg
           viewBox="0 0 36 36"
@@ -30,6 +29,9 @@
           v-clipboard:success="onCopy"
           class="colorTheme__btn"
         >Copy</button>
+        <span class="colorTheme__save" @click="saveColor">
+          <font-awesome-icon :icon="['fa', 'heart']" />
+        </span>
       </div>
     </div>
   </div>
@@ -37,7 +39,7 @@
 
 <script>
 export default {
-  name: "ColorViewer",
+  name: "ColorTheme",
   props: {
     color: {
       type: Object
@@ -69,6 +71,14 @@ export default {
       if (this.mouseOver) {
         console.log("Success");
       } else return;
+    },
+    saveColor() {
+      const colorTheme = {
+        raw_hex: this.$props.color.raw_hex,
+        color_name: this.$props.color.w3c.name
+      };
+
+      this.$store.dispatch("saveColor", colorTheme);
     }
   }
 };
