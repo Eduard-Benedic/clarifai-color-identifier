@@ -1,33 +1,33 @@
 <template>
   <main class="section">
     <div class="wrapper">
-      <h1>Signup</h1>
-      <form>
+      <h1 class="underline underline--center">Signup</h1>
+      <form id="signupform" @submit.prevent="signupDetails">
         <ul class="form">
           <li class="form__item">
             <input
               type="text"
-              v-model="name"
-              id="name"
-              name="name"
+              v-model="username"
+              name="username"
+              id="username"
               class="form__input"
             />
           </li>
           <li class="form__item">
             <input
               type="password"
-              v-model="password"
-              id="password"
-              name="password"
+              v-model="pwd"
+              name="pwd"
+              id="pwd"
               class="form__input"
             />
           </li>
           <li class="form__item">
             <input
               type="password"
-              v-model="confirmpassword"
-              id="confirmpassword"
-              name="confirmpassword"
+              v-model="confirmpwd"
+              name="confirmpwd"
+              id="confirmpwd"
               class="form__input"
             />
           </li>
@@ -45,44 +45,26 @@ export default {
   name: "Signup",
   data() {
     return {
-      name: "",
-      password: "",
-      confirmpassowrd: ""
+      username: "",
+      pwd: "",
+      confirmpwd: ""
     };
+  },
+  methods: {
+    signupDetails() {
+      const userData = {
+        username: this.username,
+        password: this.pwd
+      };
+      this.$store.dispatch("registerUser", userData);
+    }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 h1 {
   text-align: center;
 }
-.form {
-  max-width: 30rem;
-  margin: 0 auto;
-  &__item {
-    margin-bottom: 1rem;
-  }
-  &__input {
-    width: 100%;
-    padding: 1rem 0.8rem;
-    border: 1px solid $second-color;
-    border-radius: 5px;
-    outline: none;
-  }
-
-  &__btn {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 2rem;
-    background-color: $main-nuance;
-    color: $second-color;
-    font-weight: 700;
-    font-size: 1rem;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-}
+@import "../assets/stylesheets/scss/components/form";
 </style>

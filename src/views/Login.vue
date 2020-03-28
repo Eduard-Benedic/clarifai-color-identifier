@@ -1,7 +1,7 @@
 <template>
   <main class="section">
     <div class="wrapper">
-      <h1>Login</h1>
+      <h1 class="underline underline--center">Login</h1>
       <form>
         <ul class="form">
           <li class="form__item">
@@ -47,32 +47,5 @@ export default {
 h1 {
   text-align: center;
 }
-.form {
-  max-width: 30rem;
-  margin: 0 auto;
-  &__item {
-    margin-bottom: 1rem;
-  }
-  &__input {
-    width: 100%;
-    padding: 1rem 0.8rem;
-    border: 1px solid $second-color;
-    border-radius: 5px;
-    outline: none;
-  }
-
-  &__btn {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 2rem;
-    background-color: $main-nuance;
-    color: $second-color;
-    font-weight: 700;
-    font-size: 1rem;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-}
+@import "../assets/stylesheets/scss/components/form";
 </style>

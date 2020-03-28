@@ -1,0 +1,28 @@
+.form {
+  max-width: 30rem;
+  margin: 0 auto;
+  &__item {
+    margin-bottom: 1rem;
+  }
+  &__input {
+    width: 100%;
+    padding: 1rem 0.8rem;
+    border: 1px solid $second-color;
+    border-radius: 5px;
+    outline: none;
+  }
+
+  &__btn {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 2rem;
+    background-color: $main-nuance2;
+    color: $white;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}

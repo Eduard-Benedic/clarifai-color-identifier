@@ -36,3 +36,27 @@ a {
   padding: 0 1.75rem;
   width: 100%;
 }
+
+.underline {
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 1rem;
+
+  &:after {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    content: " ";
+    width: 8rem;
+    background-color: $second-color;
+    height: 2px;
+  }
+
+  &--center {
+    &:after {
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+  }
+}

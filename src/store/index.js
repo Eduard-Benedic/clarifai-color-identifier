@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Clarifai from "clarifai";
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,18 @@ export default new Vuex.Store({
     },
     CHANGE_IMG_LINK(state, payload) {
       state.imageLink = payload;
+    },
+    REGISTER_USER(state, payload) {
+      const url = "http://localhost:9000/profile";
+      console.log(payload);
+      axios
+        .post(url, payload)
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   },
   actions: {
@@ -35,6 +48,9 @@ export default new Vuex.Store({
           console.log(err);
         }
       );
+    },
+    registerUser({ commit }, payload) {
+      commit("REGISTER_USER", payload);
     }
   }
 });
