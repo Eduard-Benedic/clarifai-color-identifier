@@ -6,7 +6,9 @@
           <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
           <h3>eduard Benedic</h3>
         </div>
-        <div class="profile__grid"></div>
+        <div class="profile__grid">
+          <div>{{this.colorArray}}</div>
+        </div>
       </div>
     </div>
   </section>
@@ -18,7 +20,13 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.state.logged;
+    },
+    colorArray() {
+      return this.$store.state.userProfile;
     }
+  },
+  created() {
+    this.$store.dispatch("getProfile");
   }
 };
 </script>

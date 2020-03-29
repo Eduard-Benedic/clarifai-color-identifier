@@ -21,12 +21,13 @@ app.get("/", (req, res, next) => {
 
 mongoose.connect(
   config.getDbConnectionString(),
-  {
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-  },
+  { useNewUrlParser: true, useUnifiedTopology: true },
   function() {
     console.log("connected sucesful");
     app.listen(9000);
   }
 );
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
+mongoose.set("useUnifiedTopology", true);

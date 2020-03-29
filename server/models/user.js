@@ -5,7 +5,12 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
   username: String,
   password: String,
-  colors: Array
+  colors: [
+    {
+      raw_hex: String,
+      color_name: String
+    }
+  ]
 });
 
 var user = mongoose.model("user", userSchema);

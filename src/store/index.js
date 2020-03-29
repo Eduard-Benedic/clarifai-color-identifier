@@ -13,7 +13,7 @@ export default new Vuex.Store({
   state: {
     theme: [],
     imageLink: "",
-    logged: false,
+    logged: true,
     userProfile: []
   },
   mutations: {
@@ -35,10 +35,12 @@ export default new Vuex.Store({
         });
     },
     VERIFY_AUTHENTICATION(state, payload) {
-      console.log(payload);
       state.logged = payload;
     },
     SAVE_COLOR(state, payload) {
+      state.userProfile = payload;
+    },
+    GET_PROFILE(state, payload) {
       state.userProfile = payload;
     }
   },
@@ -69,7 +71,7 @@ export default new Vuex.Store({
         .post(directApi("user/login"), payload)
         .then(res => {
           const confirmation = res.data.logged;
-          console.log(res);
+
           commit("VERIFY_AUTHENTICATION", confirmation);
         })
         .catch(err => {
@@ -80,12 +82,21 @@ export default new Vuex.Store({
       axios
         .post(directApi("user/color"), payload)
         .then(res => {
-          console.log(res);
+          payload = res;
+          console.log(payload);
           commit("SAVE_COLOR", payload);
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    getProfile({ commit }) {
+      axios
+        .get(directApi("user/profile"))
+        .then(res => {
+          commit("GET_PROFILE", res);
+        })
+        .catch(err => console.log(err));
     }
   }
 });

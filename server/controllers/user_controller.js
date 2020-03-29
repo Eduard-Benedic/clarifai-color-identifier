@@ -1,12 +1,12 @@
 const userModel = require("../models/user");
 
 exports.getProfile = (req, res, next) => {
-  res.json({
-    name: "Eduard",
-    controller: "profile Controller",
-    stuff: "okaaaay",
-    morestuff: "asdasd"
-  });
+  userModel
+    .findById("5e7fa70070c4bd48fc34e8ff")
+    .then(dbresponse => {
+      res.json(dbresponse.colors);
+    })
+    .catch(err => console.log(err));
 };
 
 exports.signup = (req, res, next) => {
@@ -46,10 +46,15 @@ exports.saveColor = (req, res, next) => {
     color_name: req.body.color_name
   };
 
-  userModel.findById("5e7fa70070c4bd48fc34e8ff", function(err, docs) {
-    if (err) console.log(err);
-    else {
-      console.log(docs);
+  userModel.findByIdAndUpdate(
+    "5e7fa70070c4bd48fc34e8ff",
+    {
+      $push: { colors: color }
+    },
+    (err, dbres) => {
+      if (err) console.log(err);
+
+      res.json({ succes: "fine" });
     }
-  });
+  );
 };

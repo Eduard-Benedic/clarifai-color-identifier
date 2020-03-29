@@ -9,7 +9,9 @@
           <router-link to="/about" class="nav__link">About</router-link>
         </li>
         <li class="nav__item" v-if="logged">
-          <router-link to="/profile" class="nav__link">Profile</router-link>
+          <router-link to="/user/profile" class="nav__link"
+            >Profile</router-link
+          >
         </li>
       </ul>
       <ul class="nav__list">
