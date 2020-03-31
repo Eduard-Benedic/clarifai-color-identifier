@@ -1,14 +1,14 @@
 <template>
   <main class="section">
     <div class="wrapper">
-      <div class="login-msg" v-if="logged">
+      <!-- <div class="login-msg" v-if="isAuthenticated">
         <span class="login-msg__span login-msg__span--green">You have succesfully logged in!</span>
       </div>
       <div class="login-msg login-msg--red" v-else>
         <span
           class="login-msg__span login-msg__span--red"
         >Please try again, it seems that the username or password is incorrect!</span>
-      </div>
+      </div>-->
       <h1 class="underline underline--center">Login</h1>
       <form @submit.prevent="verifyAuthentication">
         <ul class="form">
@@ -43,8 +43,8 @@ export default {
     };
   },
   computed: {
-    logged() {
-      return this.$store.state.logged;
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated;
     }
   },
   methods: {
@@ -53,7 +53,11 @@ export default {
         name: this.name,
         password: this.password
       };
-      this.$store.dispatch("verifyAuthentication", credentials);
+
+      this.$store.dispatch("verifyAuthentication", {
+        credentials,
+        router: this.$router
+      });
     }
   }
 };

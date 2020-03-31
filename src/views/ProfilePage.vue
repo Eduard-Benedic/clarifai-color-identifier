@@ -1,14 +1,17 @@
 <template>
   <section class="section">
-    <div class="profile" v-if="loggedIn">
+    <div class="profile">
       <div class="wrapper">
         <div class="profile__header">
           <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
-          <h3>eduard Benedic</h3>
         </div>
-        <div class="profile__grid">
-          <div>{{this.colorArray}}</div>
+        <div>
+          <h2>Username: {{profile.username}}</h2>
+          <h3>Password: {{profile.password}}</h3>
+          <p>is Authenticated: {{this.$store.state.isAuthenticated}}</p>
+          <p>Colors: {{profile.colors}}</p>
         </div>
+        <div class="flex flex-wrap"></div>
       </div>
     </div>
   </section>
@@ -18,31 +21,29 @@
 export default {
   name: "ProfilePage",
   computed: {
-    loggedIn() {
-      return this.$store.state.logged;
-    },
-    colorArray() {
+    profile() {
       return this.$store.state.userProfile;
     }
   },
-  created() {
-    this.$store.dispatch("getProfile");
+  mounted() {
+    console.log(this.$store.state.userProfile.username);
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .profile {
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   &__header {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5rem;
   }
+
+  &__title {
+    text-transform: uppercase;
+  }
+
   &__img {
     width: 20rem;
     margin-right: 4rem;

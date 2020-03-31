@@ -8,18 +8,16 @@
         <li class="nav__item">
           <router-link to="/about" class="nav__link">About</router-link>
         </li>
-        <li class="nav__item" v-if="logged">
-          <router-link to="/user/profile" class="nav__link"
-            >Profile</router-link
-          >
+        <li class="nav__item">
+          <router-link to="/user/profile" class="nav__link">Profile</router-link>
         </li>
       </ul>
       <ul class="nav__list">
-        <li class="nav__item" v-if="!logged">
-          <router-link to="/login" class="nav__link">Login</router-link>
+        <li class="nav__item">
+          <router-link to="/user/login" class="nav__link">Login</router-link>
         </li>
         <li class="nav__item">
-          <router-link to="/signup" class="nav__link">Signup</router-link>
+          <router-link to="/user/signup" class="nav__link">Signup</router-link>
         </li>
       </ul>
     </div>

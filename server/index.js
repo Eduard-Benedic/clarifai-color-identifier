@@ -15,16 +15,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/user", userRoutes);
-app.get("/", (req, res, next) => {
-  res.send("<h1>Whatsap </h1>");
-});
 
 mongoose.connect(
   config.getDbConnectionString(),
   { useNewUrlParser: true, useUnifiedTopology: true },
   function() {
     console.log("connected sucesful");
-    app.listen(9000);
+    app.listen(port);
   }
 );
 mongoose.set("useNewUrlParser", true);

@@ -5,22 +5,10 @@
       <form id="signupform" @submit.prevent="signupDetails">
         <ul class="form">
           <li class="form__item">
-            <input
-              type="text"
-              v-model="username"
-              name="username"
-              id="username"
-              class="form__input"
-            />
+            <input type="text" v-model="username" name="username" id="username" class="form__input" />
           </li>
           <li class="form__item">
-            <input
-              type="password"
-              v-model="pwd"
-              name="pwd"
-              id="pwd"
-              class="form__input"
-            />
+            <input type="password" v-model="pwd" name="pwd" id="pwd" class="form__input" />
           </li>
           <li class="form__item">
             <input
@@ -43,6 +31,7 @@
 <script>
 export default {
   name: "Signup",
+  props: ["nextUrl"],
   data() {
     return {
       username: "",

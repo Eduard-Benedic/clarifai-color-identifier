@@ -13,8 +13,8 @@ export default new Vuex.Store({
   state: {
     theme: [],
     imageLink: "",
-    logged: true,
-    userProfile: []
+    userProfile: null,
+    isAuthenticated: null
   },
   mutations: {
     GET_COLOR_THEME(state, payload) {
@@ -24,21 +24,16 @@ export default new Vuex.Store({
       state.imageLink = payload;
     },
     REGISTER_USER(state, payload) {
+      console.log(state);
       console.log(payload);
-      axios
-        .post(directApi("user"), payload)
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
-    VERIFY_AUTHENTICATION(state, payload) {
-      state.logged = payload;
+    VERIFY_AUTHENTICATION(state, { auth, userProfile }) {
+      state.isAuthenticated = auth;
+      console.log(userProfile);
+      state.userProfile = userProfile;
     },
     SAVE_COLOR(state, payload) {
-      state.userProfile = payload;
+      console.log(payload);
     },
     GET_PROFILE(state, payload) {
       state.userProfile = payload;
@@ -64,15 +59,43 @@ export default new Vuex.Store({
       );
     },
     registerUser({ commit }, payload) {
+      axios
+        .post(directApi("user"), payload)
+        .then(response => {
+          localStorage.setItem("user", JSON.stringify(response.data[0].user));
+          localStorage.setItem("jwt", response.data.token);
+
+          if (localStorage.getItem("jwt") != null) {
+            this.$emit("loggedIn");
+            if (this.$route.params.nextUrl != null) {
+              this.$router.push(this.$route.params.nextUrl);
+            } else {
+              this.$router.push("/");
+            }
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
       commit("REGISTER_USER", payload);
     },
-    verifyAuthentication({ commit }, payload) {
+    verifyAuthentication({ commit }, { credentials, router }) {
       axios
-        .post(directApi("user/login"), payload)
+        .post(directApi("user/login"), credentials)
         .then(res => {
-          const confirmation = res.data.logged;
+          console.log(res);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("jwt", res.data.token);
 
-          commit("VERIFY_AUTHENTICATION", confirmation);
+          if (localStorage.getItem("jwt") != null) {
+            commit("VERIFY_AUTHENTICATION", {
+              auth: res.data.auth,
+              userProfile: res.data.user
+            });
+            router.push({ name: "ProfilePage" });
+          } else {
+            console.log(123);
+          }
         })
         .catch(err => {
           console.log(err);
@@ -82,9 +105,7 @@ export default new Vuex.Store({
       axios
         .post(directApi("user/color"), payload)
         .then(res => {
-          payload = res;
-          console.log(payload);
-          commit("SAVE_COLOR", payload);
+          commit("SAVE_COLOR", res.data.colors);
         })
         .catch(err => {
           console.log(err);
@@ -94,7 +115,9 @@ export default new Vuex.Store({
       axios
         .get(directApi("user/profile"))
         .then(res => {
-          commit("GET_PROFILE", res);
+          console.log(res.data);
+
+          commit("GET_PROFILE", res.data);
         })
         .catch(err => console.log(err));
     }

@@ -73,12 +73,19 @@ export default {
       } else return;
     },
     saveColor() {
-      const colorTheme = {
-        raw_hex: this.$props.color.raw_hex,
-        color_name: this.$props.color.w3c.name
-      };
-
-      this.$store.dispatch("saveColor", colorTheme);
+      const isAuthenticated = this.$store.state.isAuthenticated;
+      console.log(isAuthenticated);
+      if (isAuthenticated) {
+        console.log(this.$props.color.raw_hex);
+        var target = {
+          user: this.$store.state.userProfile.username,
+          raw_hex: this.$props.color.raw_hex,
+          color_name: this.$props.color.w3c.name
+        };
+        this.$store.dispatch("saveColor", target);
+      } else {
+        return;
+      }
     }
   }
 };

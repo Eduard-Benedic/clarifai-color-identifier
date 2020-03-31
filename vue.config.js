@@ -1,10 +1,6 @@
 module.exports = {
   devServer: {
-    proxy: {
-      "/profile": {
-        target: "http://localhost:9000"
-      }
-    }
+    proxy: "http://localhost:9000"
   },
   chainWebpack: config => {
     config.module
@@ -32,4 +28,3 @@ module.exports = {
   },
   publicPath: process.env.NODE_ENV === "production" ? "./" : "/"
 };
-const path = require("path");
