@@ -27,10 +27,14 @@ export default new Vuex.Store({
       console.log(state);
       console.log(payload);
     },
-    VERIFY_AUTHENTICATION(state, { auth, userProfile }) {
+    VERIFY_AUTHENTICATION(state, { auth, userProfile, router }) {
       state.isAuthenticated = auth;
       console.log(userProfile);
       state.userProfile = userProfile;
+      router.push({
+        name: "ProfilePage",
+        params: { profileId: state.userProfile._id }
+      });
     },
     SAVE_COLOR(state, payload) {
       console.log(payload);
@@ -83,18 +87,17 @@ export default new Vuex.Store({
       axios
         .post(directApi("user/login"), credentials)
         .then(res => {
-          console.log(res);
           localStorage.setItem("user", JSON.stringify(res.data.user));
           localStorage.setItem("jwt", res.data.token);
 
           if (localStorage.getItem("jwt") != null) {
             commit("VERIFY_AUTHENTICATION", {
               auth: res.data.auth,
-              userProfile: res.data.user
+              userProfile: res.data.user,
+              router: router
             });
-            router.push({ name: "ProfilePage" });
           } else {
-            console.log(123);
+            console.log("Error inside verifyAuthentication");
           }
         })
         .catch(err => {

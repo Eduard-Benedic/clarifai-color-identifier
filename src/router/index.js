@@ -35,7 +35,7 @@ const routes = [
     }
   },
   {
-    path: "/user/profile",
+    path: "/user/profile/:profileId",
     name: "ProfilePage",
     component: () =>
       import(/* WebpackChunkName: "Profilepage" */ "../views/ProfilePage.vue"),
@@ -60,6 +60,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.guest)) {
     next();
   } else {
+    console.log(localStorage.getItem("jwt"), "last one");
     next();
   }
 });

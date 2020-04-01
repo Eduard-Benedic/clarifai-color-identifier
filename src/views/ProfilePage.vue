@@ -6,27 +6,33 @@
           <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
         </div>
         <div>
-          <h2>Username: {{profile.username}}</h2>
+          <h2>E-mail: {{profile.username}}</h2>
           <h3>Password: {{profile.password}}</h3>
           <p>is Authenticated: {{this.$store.state.isAuthenticated}}</p>
           <p>Colors: {{profile.colors}}</p>
         </div>
-        <div class="flex flex-wrap"></div>
+        <div class="flex flex-wrap">
+          <color-theme-profile v-for="color in profile.colors" :key="color._id" :color="color"></color-theme-profile>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import ColorThemeProfile from "../components/ColorThemeProfile";
 export default {
   name: "ProfilePage",
+  components: {
+    ColorThemeProfile
+  },
   computed: {
     profile() {
       return this.$store.state.userProfile;
     }
   },
   mounted() {
-    console.log(this.$store.state.userProfile.username);
+    console.log(this.$route.params);
   }
 };
 </script>
