@@ -13,8 +13,8 @@ export default new Vuex.Store({
   state: {
     theme: [],
     imageLink: "",
-    userProfile: null,
-    isAuthenticated: null
+    isAuthenticated: null,
+    user: {},
   },
   mutations: {
     GET_COLOR_THEME(state, payload) {
@@ -27,26 +27,21 @@ export default new Vuex.Store({
       console.log(state);
       console.log(payload);
     },
-    VERIFY_AUTHENTICATION(state, { auth, userProfile, router }) {
+    VERIFY_AUTHENTICATION(state, { user, auth }) {
+      state.user = user;
       state.isAuthenticated = auth;
-      console.log(userProfile);
-      state.userProfile = userProfile;
-      router.push({
-        name: "ProfilePage",
-        params: { profileId: state.userProfile._id }
-      });
     },
     SAVE_COLOR(state, payload) {
       console.log(payload);
     },
     GET_PROFILE(state, payload) {
       state.userProfile = payload;
-    }
+    },
   },
   actions: {
     getColorTheme(context, payload) {
       const app = new Clarifai.App({
-        apiKey: "41450058567c4f9f82e960d1f82f04c8"
+        apiKey: "41450058567c4f9f82e960d1f82f04c8",
       });
       const COLOR_MODEL = "eeed0b6733a644cea07cf4c60f87ebb7";
       app.models.predict(COLOR_MODEL, payload).then(
@@ -65,7 +60,7 @@ export default new Vuex.Store({
     registerUser({ commit }, payload) {
       axios
         .post(directApi("user"), payload)
-        .then(response => {
+        .then((response) => {
           localStorage.setItem("user", JSON.stringify(response.data[0].user));
           localStorage.setItem("jwt", response.data.token);
 
@@ -84,45 +79,37 @@ export default new Vuex.Store({
       commit("REGISTER_USER", payload);
     },
     verifyAuthentication({ commit }, { credentials, router }) {
-      axios
-        .post(directApi("user/login"), credentials)
-        .then(res => {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          localStorage.setItem("jwt", res.data.token);
+      axios.post(directApi("user/login"), credentials).then((res) => {
+        const user = res.data.user;
+        const auth = res.data.auth;
 
-          if (localStorage.getItem("jwt") != null) {
-            commit("VERIFY_AUTHENTICATION", {
-              auth: res.data.auth,
-              userProfile: res.data.user,
-              router: router
-            });
-          } else {
-            console.log("Error inside verifyAuthentication");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+        if (auth) {
+          commit("VERIFY_AUTHENTICATION", { user, auth });
+          router.push({ name: "ProfilePage" });
+        } else {
+          console.log("Authentication failed");
+        }
+      });
     },
     saveColor({ commit }, payload) {
       axios
         .post(directApi("user/color"), payload)
-        .then(res => {
+        .then((res) => {
           commit("SAVE_COLOR", res.data.colors);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     getProfile({ commit }) {
       axios
         .get(directApi("user/profile"))
-        .then(res => {
+        .then((res) => {
           console.log(res.data);
 
           commit("GET_PROFILE", res.data);
         })
-        .catch(err => console.log(err));
-    }
-  }
+        .catch((err) => console.log(err));
+    },
+  },
 });

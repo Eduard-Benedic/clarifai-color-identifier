@@ -8,13 +8,13 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
   },
   {
     path: "/about",
     name: "About",
     component: () =>
-      import(/* WebpackChunkName: "about" */ "../views/About.vue")
+      import(/* WebpackChunkName: "about" */ "../views/About.vue"),
   },
   {
     path: "/user/login",
@@ -22,8 +22,8 @@ const routes = [
     component: () =>
       import(/* WebpackChunkName: "login" */ "../views/Login.vue"),
     meta: {
-      guest: true
-    }
+      guest: true,
+    },
   },
   {
     path: "/user/signup",
@@ -31,33 +31,33 @@ const routes = [
     component: () =>
       import(/* WebpackChunkName: "signup" */ "../views/Signup.vue"),
     meta: {
-      guest: true
-    }
+      guest: true,
+    },
   },
   {
-    path: "/user/profile/:profileId",
+    path: "/user/profile",
     name: "ProfilePage",
     component: () =>
       import(/* WebpackChunkName: "Profilepage" */ "../views/ProfilePage.vue"),
     meta: {
-      requiresAuth: true
-    }
-  }
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (localStorage.getItem("jwt") == null) {
       next({ name: "Login" });
     } else {
       next();
     }
-  } else if (to.matched.some(record => record.meta.guest)) {
+  } else if (to.matched.some((record) => record.meta.guest)) {
     next();
   } else {
     console.log(localStorage.getItem("jwt"), "last one");

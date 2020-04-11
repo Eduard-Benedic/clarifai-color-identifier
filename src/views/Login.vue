@@ -1,19 +1,17 @@
 <template>
   <main class="section">
     <div class="wrapper">
-      <!-- <div class="login-msg" v-if="isAuthenticated">
-        <span class="login-msg__span login-msg__span--green">You have succesfully logged in!</span>
-      </div>
-      <div class="login-msg login-msg--red" v-else>
-        <span
-          class="login-msg__span login-msg__span--red"
-        >Please try again, it seems that the username or password is incorrect!</span>
-      </div>-->
       <h1 class="underline underline--center">Login</h1>
       <form @submit.prevent="verifyAuthentication">
         <ul class="form">
           <li class="form__item">
-            <input type="text" v-model="name" id="name" name="name" class="form__input" />
+            <input
+              type="text"
+              v-model="name"
+              id="name"
+              name="name"
+              class="form__input"
+            />
           </li>
           <li class="form__item">
             <input
@@ -39,27 +37,27 @@ export default {
   data() {
     return {
       name: "",
-      password: ""
+      password: "",
     };
   },
   computed: {
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
-    }
+    },
   },
   methods: {
     verifyAuthentication() {
       const credentials = {
         name: this.name,
-        password: this.password
+        password: this.password,
       };
 
       this.$store.dispatch("verifyAuthentication", {
         credentials,
-        router: this.$router
+        router: this.$router,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

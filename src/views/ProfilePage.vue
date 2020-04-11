@@ -3,16 +3,21 @@
     <div class="profile">
       <div class="wrapper">
         <div class="profile__header">
-          <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
+          <img
+            :src="require('@/assets/images/profile-picture-github.jpg')"
+            class="profile__img"
+          />
         </div>
         <div>
-          <h2>E-mail: {{profile.username}}</h2>
-          <h3>Password: {{profile.password}}</h3>
-          <p>is Authenticated: {{this.$store.state.isAuthenticated}}</p>
-          <p>Colors: {{profile.colors}}</p>
+          <h2>E-mail: {{ profile.username }}</h2>
+          <p>Down below are your favourite colors:</p>
         </div>
         <div class="flex flex-wrap">
-          <color-theme-profile v-for="color in profile.colors" :key="color._id" :color="color"></color-theme-profile>
+          <color-theme-profile
+            v-for="color in profile.colors"
+            :key="color._id"
+            :color="color"
+          ></color-theme-profile>
         </div>
       </div>
     </div>
@@ -24,16 +29,16 @@ import ColorThemeProfile from "../components/ColorThemeProfile";
 export default {
   name: "ProfilePage",
   components: {
-    ColorThemeProfile
+    ColorThemeProfile,
   },
   computed: {
     profile() {
-      return this.$store.state.userProfile;
-    }
+      return this.$store.state.user;
+    },
   },
   mounted() {
     console.log(this.$route.params);
-  }
+  },
 };
 </script>
 

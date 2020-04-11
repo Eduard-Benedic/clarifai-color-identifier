@@ -6,7 +6,7 @@ const secret = require("../config/index").getSecret;
 exports.signup = (req, res, next) => {
   const credentials = {
     username: req.body.username,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, 8),
   };
 
   const user = new userModel(credentials);
@@ -20,7 +20,7 @@ exports.signup = (req, res, next) => {
           if (err) console.error(err);
           else {
             let token = jwt.sign({ id: uniqueUser._id }, secret(), {
-              expiresIn: 86400 // expires in 24 hours
+              expiresIn: 86400, // expires in 24 hours
             });
             return res
               .status(200)
@@ -35,10 +35,27 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
   const credentials = {
     username: req.body.name,
-    password: req.body.password
+    password: req.body.password,
   };
 
-  userModel.find({ username: credentials.username }, function(err, docs) {
+  userModel.findOne({ username: credentials.username }, (err, user) => {
+    if (err) return console.log("error", err);
+
+    const password = user.password;
+    const checkPassword = bcrypt.compareSync(credentials.password, password);
+
+    if (!checkPassword) {
+      return res.status(401).send({ auth: false, token: null });
+    } else {
+      const token = jwt.sign({ id: user._id }, secret(), {
+        expiresIn: 10 * 60,
+      });
+
+      return res.status(200).json({ auth: true, token, user });
+    }
+  });
+
+  /*userModel.find({ username: credentials.username }, function(err, docs) {
     if (err) console.log(err);
     if (docs.length > 0) {
       let isPasswordValid = bcrypt.compareSync(
@@ -60,22 +77,24 @@ exports.login = (req, res, next) => {
       return res.status(200).json({ auth: false, token: null });
     }
   });
+
+  */
 };
 
 exports.getProfile = (req, res, next) => {
   userModel
     .findById("5e7fa70070c4bd48fc34e8ff")
-    .then(dbresponse => {
+    .then((dbresponse) => {
       res.status(200).json();
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 };
 
 exports.saveColor = (req, res, next) => {
   const username = req.body.user;
   const colorTheme = {
     raw_hex: req.body.raw_hex,
-    color_name: req.body.color_name
+    color_name: req.body.color_name,
   };
 
   userModel.findOneAndUpdate(

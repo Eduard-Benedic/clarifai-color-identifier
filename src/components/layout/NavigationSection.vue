@@ -9,28 +9,19 @@
           <router-link to="/about" class="nav__link">About</router-link>
         </li>
         <li class="nav__item">
-          <router-link
-            :to="{ name: 'ProfilePage', params: { profileId: (this.$store.state.isAuthenticated ?  this.$store.state.userProfile._id : '1')   }}"
-            class="nav__link"
-          >My profile</router-link>
+          <router-link :to="{ name: 'ProfilePage' }" class="nav__link"
+            >My profile
+          </router-link>
         </li>
       </ul>
       <ul class="nav__list">
-        <li class="nav__item">
-          <router-link
-            v-if="!this.$store.state.isAuthenticated"
-            to="/user/login"
-            class="nav__link"
-          >Login</router-link>
-          <button class="nav__link" v-else @click="logOut">Log out</button>
+        <li class="nav__item" v-if="notAuthenticated">
+          <router-link to="/user/login" class="nav__link">Login</router-link>
+          <router-link to="/user/signup" class="nav__link ml--sm"
+            >Signup</router-link
+          >
         </li>
-        <li class="nav__item">
-          <router-link
-            v-if="!this.$store.state.isAuthenticated"
-            to="/user/signup"
-            class="nav__link"
-          >Signup</router-link>
-        </li>
+        <button class="nav__link" v-else @click="logOut">Log out</button>
       </ul>
     </div>
   </nav>
@@ -40,22 +31,21 @@
 export default {
   name: "NavigationSection",
   computed: {
-    logged() {
-      return this.$store.state.logged;
-    }
+    notAuthenticated() {
+      return !this.$store.state.isAuthenticated;
+    },
   },
   methods: {
-    logOut() {
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("user");
-      this.$store.state.isAuthenticated = false;
-      this.$router.push({ name: "Home" });
-    }
-  }
+    logOut() {},
+  },
 };
 </script>
 
 <style scoped>
+.ml--sm {
+  margin-left: 1rem;
+}
+
 button {
   color: white;
   border: 0;
