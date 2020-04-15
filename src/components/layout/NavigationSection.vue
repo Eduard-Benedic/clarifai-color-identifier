@@ -9,17 +9,13 @@
           <router-link to="/about" class="nav__link">About</router-link>
         </li>
         <li class="nav__item">
-          <router-link :to="{ name: 'ProfilePage' }" class="nav__link"
-            >My profile
-          </router-link>
+          <router-link :to="{ name: 'ProfilePage' }" class="nav__link">My profile</router-link>
         </li>
       </ul>
       <ul class="nav__list">
         <li class="nav__item" v-if="notAuthenticated">
           <router-link to="/user/login" class="nav__link">Login</router-link>
-          <router-link to="/user/signup" class="nav__link ml--sm"
-            >Signup</router-link
-          >
+          <router-link to="/user/signup" class="nav__link ml--sm">Signup</router-link>
         </li>
         <button class="nav__link" v-else @click="logOut">Log out</button>
       </ul>
@@ -33,11 +29,15 @@ export default {
   computed: {
     notAuthenticated() {
       return !this.$store.state.isAuthenticated;
-    },
+    }
   },
   methods: {
-    logOut() {},
-  },
+    logOut() {
+      this.$store.state.isAuthenticated = false;
+      this.$store.state.user = {};
+      this.$router.push({ name: "Login" });
+    }
+  }
 };
 </script>
 

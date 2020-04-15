@@ -1,7 +1,11 @@
 <template>
-  <div class="colorTheme" v-bind:style="{backgroundColor: color.raw_hex}">
+  <div
+    @click="deleteColor($event)"
+    class="colorTheme"
+    v-bind:style="{backgroundColor: color.raw_hex}"
+  >
     <h2 class="colorTheme__title">{{color.color_name}}</h2>
-    <h2 class="colorTheme__title">{{ color.raw_hex}}</h2>
+    <button class="colorTheme__btn colorTheme__btn--red">Delete</button>
   </div>
 </template>
 
@@ -16,7 +20,13 @@ export default {
   data() {
     return {};
   },
-  mounted() {}
+  mounted() {},
+  methods: {
+    deleteColor(event) {
+      const colorName = event.currentTarget.children[0].innerText;
+      this.$store.dispatch("deleteColor", { colorName });
+    }
+  }
 };
 </script>
 

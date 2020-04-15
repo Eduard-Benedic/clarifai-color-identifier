@@ -3,21 +3,15 @@
     <div class="profile">
       <div class="wrapper">
         <div class="profile__header">
-          <img
-            :src="require('@/assets/images/profile-picture-github.jpg')"
-            class="profile__img"
-          />
+          <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
         </div>
         <div>
-          <h2>E-mail: {{ profile.username }}</h2>
+          <h2>E-mail: {{profile.username}}</h2>
           <p>Down below are your favourite colors:</p>
         </div>
-        <div class="flex flex-wrap">
-          <color-theme-profile
-            v-for="color in profile.colors"
-            :key="color._id"
-            :color="color"
-          ></color-theme-profile>
+        <div class="flex flex-wrap">{{profile.colors}}</div>
+        <div class="flex flex-center">
+          <color-theme-profile v-for="(color,index) in profile.colors" :key="index" :color="color"></color-theme-profile>
         </div>
       </div>
     </div>
@@ -29,16 +23,22 @@ import ColorThemeProfile from "../components/ColorThemeProfile";
 export default {
   name: "ProfilePage",
   components: {
-    ColorThemeProfile,
+    ColorThemeProfile
   },
   computed: {
     profile() {
       return this.$store.state.user;
-    },
+    }
+  },
+
+  created() {
+    const cookie = { token: document.cookie };
+
+    this.$store.dispatch("populateProfile", cookie);
   },
   mounted() {
     console.log(this.$route.params);
-  },
+  }
 };
 </script>
 

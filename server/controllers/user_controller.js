@@ -51,43 +51,20 @@ exports.login = (req, res, next) => {
         expiresIn: 10 * 60,
       });
 
-      return res.status(200).json({ auth: true, token, user });
+      res.cookie("userToken", "sometoken");
+      return res.status(200).json({ auth: true, token });
     }
   });
-
-  /*userModel.find({ username: credentials.username }, function(err, docs) {
-    if (err) console.log(err);
-    if (docs.length > 0) {
-      let isPasswordValid = bcrypt.compareSync(
-        req.body.password,
-        docs[0].password
-      );
-
-      if (!isPasswordValid) {
-        return res.status(401).send({ auth: false, token: null });
-      } else {
-        let token = jwt.sign({ id: docs._id }, secret(), {
-          expiresIn: 86400
-        });
-        return res
-          .status(200)
-          .json({ auth: true, token: token, user: docs[0] });
-      }
-    } else {
-      return res.status(200).json({ auth: false, token: null });
-    }
-  });
-
-  */
 };
 
-exports.getProfile = (req, res, next) => {
-  userModel
-    .findById("5e7fa70070c4bd48fc34e8ff")
-    .then((dbresponse) => {
-      res.status(200).json();
-    })
-    .catch((err) => console.log(err));
+exports.populateProfile = (req, res, next) => {
+  const cookieToken = req.cookies.token;
+  const userId = jwt.verify(cookieToken, secret()).id;
+
+  userModel.findById(userId, (error, dbResponse) => {
+    if (error) return console.log(error);
+    return res.status(200).json({ userProfile: dbResponse });
+  });
 };
 
 exports.saveColor = (req, res, next) => {

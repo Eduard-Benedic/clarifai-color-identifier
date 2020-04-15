@@ -32,10 +32,15 @@ export default new Vuex.Store({
       state.isAuthenticated = auth;
     },
     SAVE_COLOR(state, payload) {
-      console.log(payload);
+      return console.log(payload);
     },
-    GET_PROFILE(state, payload) {
-      state.userProfile = payload;
+    DELETE_COLOR(state, { colorName }) {
+      console.log(state);
+      console.log(colorName);
+      // SEND THE REQUEST TO THE SERVER SO YOU CAN DELETE THE COLOR
+    },
+    POPULATE_PROFILE(state, { user }) {
+      return (state.user = user);
     },
   },
   actions: {
@@ -79,17 +84,20 @@ export default new Vuex.Store({
       commit("REGISTER_USER", payload);
     },
     verifyAuthentication({ commit }, { credentials, router }) {
-      axios.post(directApi("user/login"), credentials).then((res) => {
-        const user = res.data.user;
-        const auth = res.data.auth;
-
-        if (auth) {
-          commit("VERIFY_AUTHENTICATION", { user, auth });
-          router.push({ name: "ProfilePage" });
-        } else {
-          console.log("Authentication failed");
-        }
-      });
+      axios
+        .post(directApi("user/login"), credentials)
+        .then((res) => {
+          const user = res.data.user;
+          const auth = res.data.auth;
+          document.cookie = `token = ${res.data.token}`;
+          if (auth) {
+            commit("VERIFY_AUTHENTICATION", { user, auth });
+            router.push({ name: "ProfilePage" });
+          } else {
+            console.log("Authentication failed");
+          }
+        })
+        .catch((err) => console.log(err));
     },
     saveColor({ commit }, payload) {
       axios
@@ -101,15 +109,29 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
-    getProfile({ commit }) {
-      axios
-        .get(directApi("user/profile"))
-        .then((res) => {
-          console.log(res.data);
-
-          commit("GET_PROFILE", res.data);
+    deleteColor({ commit }, { colorName }) {
+      commit("DELETE_COLOR", { colorName });
+    },
+    populateProfile({ commit }, { token }) {
+      fetch(directApi("user/profile"), {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          console.log(token);
+          console.log("=========================================");
+          console.log(response);
+          return response.json();
         })
-        .catch((err) => console.log(err));
+        .then((data) => {
+          const user = data.userProfile;
+          commit("POPULATE_PROFILE", { user });
+        });
     },
   },
 });

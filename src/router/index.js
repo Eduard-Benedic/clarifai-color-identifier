@@ -50,19 +50,19 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (localStorage.getItem("jwt") == null) {
-      next({ name: "Login" });
-    } else {
-      next();
-    }
-  } else if (to.matched.some((record) => record.meta.guest)) {
-    next();
-  } else {
-    console.log(localStorage.getItem("jwt"), "last one");
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (localStorage.getItem("jwt") == null) {
+//       next({ name: "Login" });
+//     } else {
+//       next();
+//     }
+//   } else if (to.matched.some((record) => record.meta.guest)) {
+//     next();
+//   } else {
+//     console.log(localStorage.getItem("jwt"), "last one");
+//     next();
+//   }
+// });
 
 export default router;

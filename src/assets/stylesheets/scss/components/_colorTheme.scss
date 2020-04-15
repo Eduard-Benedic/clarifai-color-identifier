@@ -76,6 +76,10 @@
       font-weight: bold;
       transform: scale(1.05);
     }
+
+    &--red {
+      background-color: rgb(163, 10, 10);
+    }
   }
 
   &__input {
