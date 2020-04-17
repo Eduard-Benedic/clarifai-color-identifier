@@ -2,16 +2,13 @@
   <main class="section">
     <section class="wrapper">
       <h1 class="underline underline--center">Find your favourite color palette</h1>
+
       <p>
-        Even wondering how would you be able to get your favourite colors out of
-        a picture?
-      </p>
-      <p>
-        Or have you asked yourself why you find a particular picture more
+        Have you asked yourself why you find a particular picture more
         attractive than another?
       </p>
       <p>
-        A big portion of the answer stand in the color palette. With this app
+        The answer is in the color palette. With this app
         you are able to track the amount of color in a picture by inserting a
         color URL
       </p>
@@ -30,7 +27,7 @@
           you to save your favourite colors and draw patterns
         </li>
         <li>
-          <font-awesome-icon :icon="['fa', 'circle']" />None the less !Enjoy
+          <font-awesome-icon :icon="['fa', 'circle']" />!Enjoy
         </li>
       </ul>
     </section>

@@ -13,7 +13,7 @@ export default new Vuex.Store({
   state: {
     theme: [],
     imageLink: "",
-    isAuthenticated: null,
+    isAuthenticated: true,
     user: {},
   },
   mutations: {
@@ -31,13 +31,12 @@ export default new Vuex.Store({
       state.user = user;
       state.isAuthenticated = auth;
     },
-    SAVE_COLOR(state, payload) {
-      return console.log(payload);
+    SAVE_COLOR(state, { colors }) {
+      return (state.user.colors = colors);
     },
-    DELETE_COLOR(state, { colorName }) {
-      console.log(state);
-      console.log(colorName);
-      // SEND THE REQUEST TO THE SERVER SO YOU CAN DELETE THE COLOR
+    DELETE_COLOR(state, { colors }) {
+      console.log("DELETE_COLOR", colors);
+      return (state.user.colors = colors);
     },
     POPULATE_PROFILE(state, { user }) {
       return (state.user = user);
@@ -100,17 +99,43 @@ export default new Vuex.Store({
         .catch((err) => console.log(err));
     },
     saveColor({ commit }, payload) {
-      axios
-        .post(directApi("user/color"), payload)
+      console.log(commit);
+      console.log(payload);
+      fetch(directApi("user/color"), {
+        method: "PUT",
+        credentials: "include",
+        mode: "cors",
+        body: JSON.stringify({ payload }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
         .then((res) => {
-          commit("SAVE_COLOR", res.data.colors);
+          return res.json();
         })
-        .catch((err) => {
-          console.log(err);
+        .then((data) => {
+          return commit("SAVE_COLOR", { colors: data });
         });
     },
-    deleteColor({ commit }, { colorName }) {
-      commit("DELETE_COLOR", { colorName });
+    deleteColor({ commit }, { colorName, colorHex }) {
+      fetch(directApi("user/color"), {
+        method: "delete",
+        credentials: "include",
+        mode: "cors",
+        body: JSON.stringify({ colorName, colorHex }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Delete Color", data);
+          return commit("DELETE_COLOR", { colors: data.colors });
+        });
     },
     populateProfile({ commit }, { token }) {
       fetch(directApi("user/profile"), {

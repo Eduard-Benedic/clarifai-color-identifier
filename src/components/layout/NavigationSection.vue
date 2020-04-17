@@ -35,6 +35,7 @@ export default {
     logOut() {
       this.$store.state.isAuthenticated = false;
       this.$store.state.user = {};
+      document.cookie = "token = none";
       this.$router.push({ name: "Login" });
     }
   }

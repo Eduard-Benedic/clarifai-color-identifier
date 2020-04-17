@@ -5,7 +5,7 @@
     v-bind:style="{backgroundColor: color.raw_hex}"
   >
     <h2 class="colorTheme__title">{{color.color_name}}</h2>
-    <button class="colorTheme__btn colorTheme__btn--red">Delete</button>
+    <a class="colorTheme__btn colorTheme__btn--red">Delete</a>
   </div>
 </template>
 
@@ -24,7 +24,10 @@ export default {
   methods: {
     deleteColor(event) {
       const colorName = event.currentTarget.children[0].innerText;
-      this.$store.dispatch("deleteColor", { colorName });
+      const colorHex = this.color.raw_hex;
+
+      console.log(colorHex);
+      this.$store.dispatch("deleteColor", { colorName, colorHex });
     }
   }
 };

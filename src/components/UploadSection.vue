@@ -5,7 +5,7 @@
         Enter Link
         <font-awesome-icon :icon="['fa', 'link']" />
       </h2>
-      <form @submit.prevent="fetchTheme($event,'https://samples.clarifai.com/metro-north.jpg')">
+      <form @submit.prevent="fetchTheme($event)">
         <input class="uploader__input" name="themeColor" id="themeColor" type="input" />
 
         <button class="uploader__btn">
@@ -21,8 +21,9 @@
 export default {
   name: "UploadSection",
   methods: {
-    fetchTheme($event, urlStr) {
-      urlStr = $event.target.elements[0].value;
+    fetchTheme($event) {
+      const urlStr = $event.target.elements[0].value;
+      console.log("urlStr", urlStr);
       this.$store.dispatch("getColorTheme", urlStr);
     }
   }

@@ -78,7 +78,7 @@ export default {
       if (isAuthenticated) {
         console.log(this.$props.color.raw_hex);
         var target = {
-          user: this.$store.state.userProfile.username,
+          user: this.$store.state.user.username,
           raw_hex: this.$props.color.raw_hex,
           color_name: this.$props.color.w3c.name
         };

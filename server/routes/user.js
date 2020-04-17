@@ -5,6 +5,7 @@ const userController = require("../controllers/user_controller");
 router.get("/profile", userController.populateProfile);
 router.post("/", userController.signup);
 router.post("/login", userController.login);
-router.post("/color", userController.saveColor);
+router.put("/color", userController.saveColor);
+router.delete("/color", userController.deleteColor);
 
 module.exports = router;

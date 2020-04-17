@@ -48,7 +48,7 @@ exports.login = (req, res, next) => {
       return res.status(401).send({ auth: false, token: null });
     } else {
       const token = jwt.sign({ id: user._id }, secret(), {
-        expiresIn: 10 * 60,
+        expiresIn: 60 * 60, // 1 hour
       });
 
       res.cookie("userToken", "sometoken");
@@ -59,6 +59,7 @@ exports.login = (req, res, next) => {
 
 exports.populateProfile = (req, res, next) => {
   const cookieToken = req.cookies.token;
+
   const userId = jwt.verify(cookieToken, secret()).id;
 
   userModel.findById(userId, (error, dbResponse) => {
@@ -68,21 +69,51 @@ exports.populateProfile = (req, res, next) => {
 };
 
 exports.saveColor = (req, res, next) => {
-  const username = req.body.user;
+  const cookieToken = req.cookies.token;
+  const userId = jwt.verify(cookieToken, secret()).id;
+  console.log("=================");
+  console.log(req.body);
+  console.log("==================");
   const colorTheme = {
-    raw_hex: req.body.raw_hex,
-    color_name: req.body.color_name,
+    raw_hex: req.body.payload.raw_hex,
+    color_name: req.body.payload.color_name,
   };
 
-  userModel.findOneAndUpdate(
-    { username: username },
+  console.log(colorTheme);
+  userModel.findByIdAndUpdate(
+    userId,
     { $push: { colors: colorTheme } },
     (err, user) => {
       if (err) console.log(err);
       else {
-        console.log(user);
         return res.status(200).json({ colors: user.colors });
       }
     }
   );
+};
+
+exports.deleteColor = (req, res, next) => {
+  const colorName = req.body.colorName;
+  const colorHex = req.body.colorHex;
+
+  const cookieToken = req.cookies.token;
+  const userId = jwt.verify(cookieToken, secret()).id;
+
+  userModel.findById(userId, (err, dbResponse) => {
+    if (err) return console.log(err);
+    const colorArr = dbResponse.colors;
+    const newColorArr = colorArr.filter((color) => {
+      return colorHex != color.raw_hex;
+    });
+
+    userModel.findOneAndUpdate(
+      { _id: userId },
+      { $set: { colors: newColorArr } },
+      (err, dbres) => {
+        if (err) return console.log(err);
+        console.log("dbres", dbres);
+        return res.status(200).json({ colors: dbres.colors });
+      }
+    );
+  });
 };
