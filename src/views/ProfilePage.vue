@@ -6,13 +6,13 @@
           <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
         </div>
         <div>
-          <h2>E-mail: {{profile.username}}</h2>
+          <h2>E-mail: {{ profile.username }}</h2>
           <p>Down below are your favourite colors:</p>
         </div>
-        <div class="flex flex-wrap">{{profile.colors}}</div>
-        <div class="flex flex-center">
-          <color-theme-profile v-for="(color,index) in profile.colors" :key="index" :color="color"></color-theme-profile>
+        <div class="flex flex-center" v-if="(profile.colors.length > 0)">
+          <color-theme-profile v-for="(color, index) in profile.colors" :key="index" :color="color"></color-theme-profile>
         </div>
+        <p v-else>You have not added any color</p>
       </div>
     </div>
   </section>
@@ -27,17 +27,31 @@ export default {
   },
   computed: {
     profile() {
-      return this.$store.state.user;
+      return this.$store.getters.profile;
     }
   },
 
   created() {
-    const cookie = { token: document.cookie };
-
-    this.$store.dispatch("populateProfile", cookie);
+    this.$store.dispatch("populateProfile");
   },
-  mounted() {
-    console.log(this.$route.params);
+  mounted() {},
+
+  methods: {
+    submitImg() {
+      // const files = this.$el.querySelector("[name='avatar']").files;
+      // const formData = new FormData();
+      // for (let i = 0; i < files.length; i++) {
+      //   let file = files[i];
+      //   formData.append("files[]", file);
+      // }
+      // fetch("http://localhost:9000/image", {
+      //   method: "POST",
+      //   body: formData,
+      //   mode: "no-cors",
+      // }).then((response) => {
+      //   console.log(response);
+      // });
+    }
   }
 };
 </script>

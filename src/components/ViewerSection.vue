@@ -4,6 +4,7 @@
       <upload-section></upload-section>
       <div class="img-preview">
         <h2 class="img-preview__title">Image preview</h2>
+
         <img class="img-preview__img" :src="imageLink" alt />
       </div>
       <div class="flex flex-wrap flex-center pd-tb--lg">

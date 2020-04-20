@@ -64,22 +64,24 @@ exports.populateProfile = (req, res, next) => {
 
   userModel.findById(userId, (error, dbResponse) => {
     if (error) return console.log(error);
-    return res.status(200).json({ userProfile: dbResponse });
+    console.log("Populate Profile", dbResponse);
+    return res.status(200).json({
+      userProfile: {
+        username: dbResponse.username,
+        colors: dbResponse.colors,
+      },
+    });
   });
 };
 
 exports.saveColor = (req, res, next) => {
   const cookieToken = req.cookies.token;
   const userId = jwt.verify(cookieToken, secret()).id;
-  console.log("=================");
-  console.log(req.body);
-  console.log("==================");
   const colorTheme = {
     raw_hex: req.body.payload.raw_hex,
     color_name: req.body.payload.color_name,
   };
 
-  console.log(colorTheme);
   userModel.findByIdAndUpdate(
     userId,
     { $push: { colors: colorTheme } },
@@ -92,28 +94,25 @@ exports.saveColor = (req, res, next) => {
   );
 };
 
-exports.deleteColor = (req, res, next) => {
-  const colorName = req.body.colorName;
+exports.deleteColor = async (req, res, next) => {
   const colorHex = req.body.colorHex;
 
   const cookieToken = req.cookies.token;
   const userId = jwt.verify(cookieToken, secret()).id;
 
-  userModel.findById(userId, (err, dbResponse) => {
+  await userModel.findById(userId, (err, dbResponse) => {
     if (err) return console.log(err);
     const colorArr = dbResponse.colors;
     const newColorArr = colorArr.filter((color) => {
       return colorHex != color.raw_hex;
     });
 
-    userModel.findOneAndUpdate(
-      { _id: userId },
-      { $set: { colors: newColorArr } },
-      (err, dbres) => {
-        if (err) return console.log(err);
-        console.log("dbres", dbres);
-        return res.status(200).json({ colors: dbres.colors });
-      }
-    );
+    dbResponse.updateOne({ $set: { colors: newColorArr } }, function(e, r) {});
+
+    userModel.findById(userId, (err, dbResponse) => {
+      if (err) return console.log(err);
+      console.log(dbResponse);
+      return res.status(200).json({ colors: dbResponse.colors });
+    });
   });
 };

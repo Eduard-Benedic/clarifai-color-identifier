@@ -8,9 +8,13 @@ var userSchema = new Schema({
   colors: [
     {
       raw_hex: String,
-      color_name: String
-    }
-  ]
+      color_name: String,
+    },
+  ],
+  img: {
+    data: Buffer,
+    contentType: String,
+  },
 });
 
 var user = mongoose.model("user", userSchema);

@@ -16,6 +16,11 @@ export default new Vuex.Store({
     isAuthenticated: true,
     user: {},
   },
+  getters: {
+    profile: (state) => {
+      return state.user;
+    },
+  },
   mutations: {
     GET_COLOR_THEME(state, payload) {
       state.theme = payload;
@@ -35,8 +40,7 @@ export default new Vuex.Store({
       return (state.user.colors = colors);
     },
     DELETE_COLOR(state, { colors }) {
-      console.log("DELETE_COLOR", colors);
-      return (state.user.colors = colors);
+      state.user.colors = colors;
     },
     POPULATE_PROFILE(state, { user }) {
       return (state.user = user);
@@ -118,18 +122,19 @@ export default new Vuex.Store({
           return commit("SAVE_COLOR", { colors: data });
         });
     },
-    deleteColor({ commit }, { colorName, colorHex }) {
+    deleteColor({ commit }, { colorHex }) {
       fetch(directApi("user/color"), {
         method: "delete",
         credentials: "include",
         mode: "cors",
-        body: JSON.stringify({ colorName, colorHex }),
+        body: JSON.stringify({ colorHex }),
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
       })
         .then((res) => {
+          console.log("res in delete request");
           return res.json();
         })
         .then((data) => {
@@ -137,7 +142,7 @@ export default new Vuex.Store({
           return commit("DELETE_COLOR", { colors: data.colors });
         });
     },
-    populateProfile({ commit }, { token }) {
+    populateProfile({ commit }) {
       fetch(directApi("user/profile"), {
         method: "GET",
         credentials: "include",
@@ -148,9 +153,6 @@ export default new Vuex.Store({
         },
       })
         .then((response) => {
-          console.log(token);
-          console.log("=========================================");
-          console.log(response);
           return response.json();
         })
         .then((data) => {
