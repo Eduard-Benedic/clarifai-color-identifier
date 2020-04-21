@@ -3,10 +3,10 @@
     v-on:mouseover="revealAction"
     v-on:mouseleave="hideAction"
     class="colorTheme"
-    v-bind:style="{backgroundColor: color.raw_hex}"
+    v-bind:style="{ backgroundColor: color.raw_hex }"
   >
-    <h2 class="colorTheme__title">{{splitName(color.w3c.name)}}</h2>
-    <h3 class="colorTheme__composition">{{color.value}}%</h3>
+    <h2 class="colorTheme__title">{{ splitName(color.w3c.name) }}</h2>
+    <h3 class="colorTheme__composition">{{ color.value }}%</h3>
 
     <div class="colorTheme__controller">
       <input class="colorTheme__input" type="text" v-model="message" />
@@ -21,15 +21,24 @@
           <path
             d="M32 22h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2zm0-4h2v2h-2zm-4 0h2v2h-2zm-4 0h2v2h-2zm-4 0h2v2h-2zm-4 0h2v2h-2zm-4 0h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2z"
           />
-          <path d="M10 12H3a1 1 0 0 0-1 1v20a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1v-7H10z" />
+          <path
+            d="M10 12H3a1 1 0 0 0-1 1v20a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1v-7H10z"
+          />
         </svg>
         <button
           type="button"
           v-clipboard:copy="message"
           v-clipboard:success="onCopy"
           class="colorTheme__btn"
-        >Copy</button>
-        <span class="colorTheme__save" @click="saveColor">
+        >
+          Copy
+        </button>
+
+        <span
+          v-if="this.$store.state.isAuthenticated"
+          class="colorTheme__save"
+          @click="saveColor"
+        >
           <font-awesome-icon :icon="['fa', 'heart']" />
         </span>
       </div>
@@ -42,13 +51,13 @@ export default {
   name: "ColorTheme",
   props: {
     color: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
       mouseOver: false,
-      message: this.$props.color.raw_hex
+      message: this.$props.color.raw_hex,
     };
   },
   mounted() {},
@@ -80,14 +89,14 @@ export default {
         var target = {
           user: this.$store.state.user.username,
           raw_hex: this.$props.color.raw_hex,
-          color_name: this.$props.color.w3c.name
+          color_name: this.$props.color.w3c.name,
         };
         this.$store.dispatch("saveColor", target);
       } else {
         return;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -2,8 +2,13 @@ const userModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = require("../config/index").getSecret;
+const { check, validationResult } = require("express-validator");
 
 exports.signup = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
   const credentials = {
     username: req.body.username,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -22,9 +27,14 @@ exports.signup = (req, res, next) => {
             let token = jwt.sign({ id: uniqueUser._id }, secret(), {
               expiresIn: 86400, // expires in 24 hours
             });
-            return res
-              .status(200)
-              .send({ auth: true, token: token, user: uniqueUser });
+            return res.status(200).send({
+              auth: true,
+              token: token,
+              user: {
+                username: uniqueUser.username,
+                colors: uniqueUser.colors,
+              },
+            });
           }
         });
       }
@@ -45,10 +55,14 @@ exports.login = (req, res, next) => {
     const checkPassword = bcrypt.compareSync(credentials.password, password);
 
     if (!checkPassword) {
-      return res.status(401).send({ auth: false, token: null });
+      return res.status(401).send({
+        auth: false,
+        token: null,
+        msg: "Authentication failed, try again",
+      });
     } else {
       const token = jwt.sign({ id: user._id }, secret(), {
-        expiresIn: 60 * 60, // 1 hour
+        expiresIn: 60 * 60, // expires in 1 hour
       });
 
       res.cookie("userToken", "sometoken");

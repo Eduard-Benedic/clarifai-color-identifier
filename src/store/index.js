@@ -13,7 +13,7 @@ export default new Vuex.Store({
   state: {
     theme: [],
     imageLink: "",
-    isAuthenticated: true,
+    isAuthenticated: false,
     user: {},
   },
   getters: {
@@ -34,6 +34,7 @@ export default new Vuex.Store({
     },
     VERIFY_AUTHENTICATION(state, { user, auth }) {
       state.user = user;
+      console.log("AUTH", auth);
       state.isAuthenticated = auth;
     },
     SAVE_COLOR(state, { colors }) {

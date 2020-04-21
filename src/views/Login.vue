@@ -2,6 +2,17 @@
   <main class="section">
     <div class="wrapper">
       <h1 class="underline underline--center">Login</h1>
+      <div
+        :style="{
+          width: '400px',
+          textAlign: 'center',
+          margin: '1rem auto',
+          color: 'red',
+        }"
+      >
+        There was a problem logging in. Check your email and password or create
+        an account.
+      </div>
       <form @submit.prevent="verifyAuthentication">
         <ul class="form">
           <li class="form__item">
