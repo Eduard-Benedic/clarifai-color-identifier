@@ -52,9 +52,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const cookie = document.cookie.split("=");
-
-    if (cookie[1] === "none") {
+    const a = true;
+    if (a) {
       next({ name: "Login" });
     } else {
       next();

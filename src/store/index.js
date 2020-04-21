@@ -32,9 +32,9 @@ export default new Vuex.Store({
       console.log(state);
       console.log(payload);
     },
-    VERIFY_AUTHENTICATION(state, { user, auth }) {
+    SET_AUTHENTICATION(state, { user, auth }) {
+      console.log("SET_AUTEHNTICATION");
       state.user = user;
-      console.log("AUTH", auth);
       state.isAuthenticated = auth;
     },
     SAVE_COLOR(state, { colors }) {
@@ -95,13 +95,36 @@ export default new Vuex.Store({
           const auth = res.data.auth;
           document.cookie = `token = ${res.data.token}`;
           if (auth) {
-            commit("VERIFY_AUTHENTICATION", { user, auth });
+            commit("SET_AUTHENTICATION", { user, auth });
             router.push({ name: "ProfilePage" });
           } else {
             console.log("Authentication failed");
           }
         })
         .catch((err) => console.log(err));
+    },
+    logOut({ commit }) {
+      const cookie = document.cookie;
+      console.log("Log out cookie to be sent", cookie);
+      // fetch(directApi("user/logout"))
+      fetch(directApi("user/logOut"), {
+        credentials: "include",
+      })
+        .then((jsonRes) => {
+          return jsonRes.json();
+        })
+        .then((data) => {
+          const dbData = {
+            auth: data.auth,
+            user: data.user,
+          };
+
+          console.log(dbData, "dbData");
+          commit("SET_AUTHENTICATION", {
+            user: dbData.user,
+            auth: dbData.auth,
+          });
+        });
     },
     saveColor({ commit }, payload) {
       console.log(commit);

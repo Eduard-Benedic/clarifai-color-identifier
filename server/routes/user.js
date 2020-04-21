@@ -11,8 +11,9 @@ router.post(
   userController.signup
 );
 
-router.post("/login", userController.login);
+router.post("/login", userController.logIn);
 router.put("/color", userController.saveColor);
 router.delete("/color", userController.deleteColor);
+router.get("/logOut", userController.logOut);
 
 module.exports = router;

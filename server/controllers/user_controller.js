@@ -42,7 +42,7 @@ exports.signup = (req, res, next) => {
   });
 };
 
-exports.login = (req, res, next) => {
+exports.logIn = (req, res, next) => {
   const credentials = {
     username: req.body.name,
     password: req.body.password,
@@ -71,19 +71,40 @@ exports.login = (req, res, next) => {
   });
 };
 
-exports.populateProfile = (req, res, next) => {
+exports.logOut = (req, res, next) => {
   const cookieToken = req.cookies.token;
 
   const userId = jwt.verify(cookieToken, secret()).id;
+  const token = jwt.sign(
+    {
+      id: userId,
+      exp: Math.floor(Date.now() / 1000) - 500,
+    },
+    secret()
+  );
+  res.clearCookie("token", { path: "/user" });
+  res.cookie("token", token, { path: "/user" });
+  return res.json({ user: null, auth: false });
+};
 
-  userModel.findById(userId, (error, dbResponse) => {
-    if (error) return console.log(error);
-    console.log("Populate Profile", dbResponse);
-    return res.status(200).json({
-      userProfile: {
-        username: dbResponse.username,
-        colors: dbResponse.colors,
-      },
+exports.populateProfile = (req, res, next) => {
+  const cookieToken = req.cookies.token;
+
+  jwt.verify(cookieToken, secret(), (err, decoded) => {
+    if (err)
+      return res.json({
+        userProfile: { username: null, colors: null },
+      });
+    const userId = decoded.id;
+    userModel.findById(userId, (error, dbResponse) => {
+      if (error) return res.json({ auth: false, user: null });
+
+      return res.status(200).json({
+        userProfile: {
+          username: dbResponse.username,
+          colors: dbResponse.colors,
+        },
+      });
     });
   });
 };

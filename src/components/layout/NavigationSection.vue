@@ -33,9 +33,7 @@ export default {
   },
   methods: {
     logOut() {
-      this.$store.state.isAuthenticated = false;
-      this.$store.state.user = {};
-      document.cookie = "token = none";
+      this.$store.dispatch("logOut");
       this.$router.push({ name: "Login" });
     }
   }
