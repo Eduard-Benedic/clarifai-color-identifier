@@ -1,10 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Clarifai from "clarifai";
-import axios from "axios";
 
 Vue.use(Vuex);
-function directApi(route) {
+function apiEndpoint(route) {
   const api = "http://localhost:9000";
   return `${api}/${route}`;
 }
@@ -32,9 +31,8 @@ export default new Vuex.Store({
       console.log(state);
       console.log(payload);
     },
-    SET_AUTHENTICATION(state, { user, auth }) {
-      console.log("SET_AUTEHNTICATION");
-      state.user = user;
+    SET_AUTHENTICATION(state, { auth }) {
+      window.is_authenticated = auth;
       state.isAuthenticated = auth;
     },
     SAVE_COLOR(state, { colors }) {
@@ -66,36 +64,49 @@ export default new Vuex.Store({
         }
       );
     },
-    registerUser({ commit }, payload) {
-      axios
-        .post(directApi("user"), payload)
-        .then((response) => {
-          localStorage.setItem("user", JSON.stringify(response.data[0].user));
-          localStorage.setItem("jwt", response.data.token);
-
-          if (localStorage.getItem("jwt") != null) {
-            this.$emit("loggedIn");
-            if (this.$route.params.nextUrl != null) {
-              this.$router.push(this.$route.params.nextUrl);
-            } else {
-              this.$router.push("/");
-            }
-          }
+    registerUser({ commit }, { signUpCredentials, router }) {
+      console.log("signUpCrendetials before sent", signUpCredentials);
+      fetch(apiEndpoint("user/signup"), {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+        body: JSON.stringify(signUpCredentials),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((jsonRes) => {
+          return jsonRes.json();
         })
-        .catch(function(error) {
-          console.log(error);
+        .then((res) => {
+          console.log(res);
+
+          commit("SET_AUTHENTICATION", { auth: res.auth });
+          router.push({ name: "ProfilePage" });
+        })
+        .catch((err) => {
+          return console.log(err);
         });
-      commit("REGISTER_USER", payload);
     },
     verifyAuthentication({ commit }, { credentials, router }) {
-      axios
-        .post(directApi("user/login"), credentials)
+      fetch(apiEndpoint("user/login"), {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        mode: "cors",
+      })
+        .then((initialRes) => {
+          return initialRes.json();
+        })
         .then((res) => {
-          const user = res.data.user;
-          const auth = res.data.auth;
-          document.cookie = `token = ${res.data.token}`;
+          const auth = res.auth;
           if (auth) {
-            commit("SET_AUTHENTICATION", { user, auth });
+            commit("SET_AUTHENTICATION", { auth });
             router.push({ name: "ProfilePage" });
           } else {
             console.log("Authentication failed");
@@ -104,10 +115,7 @@ export default new Vuex.Store({
         .catch((err) => console.log(err));
     },
     logOut({ commit }) {
-      const cookie = document.cookie;
-      console.log("Log out cookie to be sent", cookie);
-      // fetch(directApi("user/logout"))
-      fetch(directApi("user/logOut"), {
+      fetch(apiEndpoint("user/logOut"), {
         credentials: "include",
       })
         .then((jsonRes) => {
@@ -118,10 +126,7 @@ export default new Vuex.Store({
             auth: data.auth,
             user: data.user,
           };
-
-          console.log(dbData, "dbData");
           commit("SET_AUTHENTICATION", {
-            user: dbData.user,
             auth: dbData.auth,
           });
         });
@@ -129,7 +134,7 @@ export default new Vuex.Store({
     saveColor({ commit }, payload) {
       console.log(commit);
       console.log(payload);
-      fetch(directApi("user/color"), {
+      fetch(apiEndpoint("user/color"), {
         method: "PUT",
         credentials: "include",
         mode: "cors",
@@ -147,7 +152,7 @@ export default new Vuex.Store({
         });
     },
     deleteColor({ commit }, { colorHex }) {
-      fetch(directApi("user/color"), {
+      fetch(apiEndpoint("user/color"), {
         method: "delete",
         credentials: "include",
         mode: "cors",
@@ -167,7 +172,7 @@ export default new Vuex.Store({
         });
     },
     populateProfile({ commit }) {
-      fetch(directApi("user/profile"), {
+      fetch(apiEndpoint("user/profile"), {
         method: "GET",
         credentials: "include",
         mode: "cors",

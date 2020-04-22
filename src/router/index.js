@@ -52,8 +52,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const a = true;
-    if (a) {
+    // THIS IS NEEDED AS I COULD NOT FIND ANOTHER WAY TO COMMUNICATE
+    //      WITH THE STORE AND ROUTER THROUGH THE MAIN INSTANCE
+    const isAuthenticated = window.is_authenticated;
+    if (!isAuthenticated) {
       next({ name: "Login" });
     } else {
       next();

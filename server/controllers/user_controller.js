@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const secret = require("../config/index").getSecret;
 const { check, validationResult } = require("express-validator");
 
-exports.signup = (req, res, next) => {
+exports.signUp = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -27,14 +27,14 @@ exports.signup = (req, res, next) => {
             let token = jwt.sign({ id: uniqueUser._id }, secret(), {
               expiresIn: 86400, // expires in 24 hours
             });
-            return res.status(200).send({
-              auth: true,
-              token: token,
-              user: {
-                username: uniqueUser.username,
-                colors: uniqueUser.colors,
-              },
-            });
+            console.log("Token for signing up", token);
+            res.cookie("token", token);
+            return res
+              .status(200)
+              .json({
+                auth: true,
+                message: "Succesfuly signe up cookie should be set",
+              });
           }
         });
       }
@@ -65,8 +65,10 @@ exports.logIn = (req, res, next) => {
         expiresIn: 60 * 60, // expires in 1 hour
       });
 
-      res.cookie("userToken", "sometoken");
-      return res.status(200).json({ auth: true, token });
+      res.cookie("token", token);
+      return res
+        .status(200)
+        .json({ auth: true, message: "Authentication succeded" });
     }
   });
 };
@@ -82,8 +84,8 @@ exports.logOut = (req, res, next) => {
     },
     secret()
   );
-  res.clearCookie("token", { path: "/user" });
-  res.cookie("token", token, { path: "/user" });
+  res.clearCookie("token", { path: "/" });
+  res.cookie("token", token, { path: "/" });
   return res.json({ user: null, auth: false });
 };
 

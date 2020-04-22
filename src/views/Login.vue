@@ -2,7 +2,8 @@
   <main class="section">
     <div class="wrapper">
       <h1 class="underline underline--center">Login</h1>
-      <div
+      <!-- <div
+        v-if="!this.$store.state.isAuthenticated"
         :style="{
           width: '400px',
           textAlign: 'center',
@@ -12,17 +13,11 @@
       >
         There was a problem logging in. Check your email and password or create
         an account.
-      </div>
+      </div>-->
       <form @submit.prevent="verifyAuthentication">
         <ul class="form">
           <li class="form__item">
-            <input
-              type="text"
-              v-model="name"
-              id="name"
-              name="name"
-              class="form__input"
-            />
+            <input type="text" v-model="name" id="name" name="name" class="form__input" />
           </li>
           <li class="form__item">
             <input
@@ -48,27 +43,27 @@ export default {
   data() {
     return {
       name: "",
-      password: "",
+      password: ""
     };
   },
   computed: {
     isAuthenticated() {
       return this.$store.state.isAuthenticated;
-    },
+    }
   },
   methods: {
     verifyAuthentication() {
       const credentials = {
         name: this.name,
-        password: this.password,
+        password: this.password
       };
 
       this.$store.dispatch("verifyAuthentication", {
         credentials,
-        router: this.$router,
+        router: this.$router
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

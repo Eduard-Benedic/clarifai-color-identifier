@@ -53,24 +53,27 @@ export default {
       username: "",
       pwd: "",
       confirmpwd: "",
-      errorMsg: "",
+      errorMsg: ""
     };
   },
   methods: {
     signupDetails() {
-      const match = this.username === this.pwd;
+      const match = this.pwd === this.confirmpwd;
 
       if (match) {
-        const userData = {
+        const signUpCredentials = {
           username: this.username,
-          password: this.pwd,
+          password: this.pwd
         };
-        this.$store.dispatch("registerUser", userData);
+        this.$store.dispatch("registerUser", {
+          signUpCredentials,
+          router: this.$router
+        });
       } else {
         this.errorMsg = "Password don't match please try again";
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

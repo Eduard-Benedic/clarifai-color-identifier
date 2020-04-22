@@ -5,10 +5,11 @@ const userController = require("../controllers/user_controller");
 const { check, validationResult } = require("express-validator");
 
 router.get("/profile", userController.populateProfile);
+
 router.post(
-  "/",
+  "/signup",
   [check("username").isEmail(), check("password").isLength({ min: 5 })],
-  userController.signup
+  userController.signUp
 );
 
 router.post("/login", userController.logIn);
