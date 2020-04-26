@@ -7,7 +7,6 @@
       </h2>
       <form @submit.prevent="fetchTheme($event)">
         <input class="uploader__input" name="themeColor" id="themeColor" type="input" />
-
         <button class="uploader__btn">
           Search color composition
           <font-awesome-icon :icon="['fa', 'search']" />
@@ -20,6 +19,7 @@
 <script>
 export default {
   name: "UploadSection",
+
   methods: {
     fetchTheme($event) {
       const urlStr = $event.target.elements[0].value;

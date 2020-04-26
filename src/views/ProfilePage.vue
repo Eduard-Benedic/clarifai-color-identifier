@@ -3,13 +3,13 @@
     <div class="profile">
       <div class="wrapper">
         <div class="profile__header">
-          <img :src="require('@/assets/images/profile-picture-github.jpg')" class="profile__img" />
+          <profile-img></profile-img>
         </div>
         <div>
           <h2>E-mail: {{ profile.username }}</h2>
           <p>Down below are your favourite colors:</p>
         </div>
-        <div class="flex flex-center" v-if="profile.colors && (profile.colors.length > 0)">
+        <div class="flex flex-center" v-if="profile.colors && profile.colors.length > 0">
           <color-theme-profile v-for="(color, index) in profile.colors" :key="index" :color="color"></color-theme-profile>
         </div>
         <p v-else>You have not added any color</p>
@@ -20,10 +20,12 @@
 
 <script>
 import ColorThemeProfile from "../components/ColorThemeProfile";
+import ProfileImg from "../components/ProfileImage";
 export default {
   name: "ProfilePage",
   components: {
-    ColorThemeProfile
+    ColorThemeProfile,
+    ProfileImg
   },
   computed: {
     profile() {
@@ -36,9 +38,7 @@ export default {
   },
   mounted() {},
 
-  methods: {
-    submitImg() {}
-  }
+  methods: {}
 };
 </script>
 

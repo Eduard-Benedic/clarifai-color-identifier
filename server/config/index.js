@@ -6,5 +6,5 @@ module.exports = {
   },
   getSecret: function() {
     return config.secret;
-  }
+  },
 };

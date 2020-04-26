@@ -11,10 +11,7 @@ var userSchema = new Schema({
       color_name: String,
     },
   ],
-  img: {
-    data: Buffer,
-    contentType: String,
-  },
+  img: Buffer,
 });
 
 var user = mongoose.model("user", userSchema);

@@ -8,7 +8,11 @@
         <img class="img-preview__img" :src="imageLink" alt />
       </div>
       <div class="flex flex-wrap flex-center pd-tb--lg">
-        <color-theme v-for="(color, index) in this.$store.state.theme" :key="index" :color="color"></color-theme>
+        <color-theme
+          v-for="(color, index) in this.$store.state.theme"
+          :key="index"
+          :color="color"
+        ></color-theme>
       </div>
     </div>
   </div>
@@ -22,13 +26,13 @@ export default {
   name: "ViewerSection",
   components: {
     ColorTheme,
-    UploadSection
+    UploadSection,
   },
   computed: {
     imageLink() {
       return this.$store.state.imageLink;
-    }
-  }
+    },
+  },
 };
 </script>
 

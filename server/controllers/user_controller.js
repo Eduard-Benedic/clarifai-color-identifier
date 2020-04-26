@@ -4,6 +4,51 @@ const jwt = require("jsonwebtoken");
 const secret = require("../config/index").getSecret;
 const { check, validationResult } = require("express-validator");
 
+const path = require("path");
+const multer = require("multer");
+// const storage = multer.diskStorage({
+//   destination: "./uploads",
+//   filename: function(req, file, cb) {
+//     cb(
+//       null,
+//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+//     );
+//   },
+// });
+
+const storage = multer.memoryStorage();
+// INIT upload
+const upload = multer({
+  storage: storage,
+}).single("myFile");
+
+exports.submitImg = (req, res, next) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.json({ message: "whatasp" });
+    } else {
+      const userId = "5e9fa3f3037d285108cb719b";
+      userModel.findByIdAndUpdate(
+        userId,
+        { img: req.file.buffer },
+        (err, dbResponse) => {
+          if (err) return console.log(err);
+          else {
+            // console.log(dbResponse);
+            res.setHeader("Content-Type", "image/jpeg");
+
+            const buffer = new Buffer(dbResponse.img.buffer);
+
+            const img = buffer.toString("base64");
+
+            return res.json({ img });
+          }
+        }
+      );
+    }
+  });
+};
+
 exports.signUp = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -29,12 +74,10 @@ exports.signUp = (req, res, next) => {
             });
             console.log("Token for signing up", token);
             res.cookie("token", token);
-            return res
-              .status(200)
-              .json({
-                auth: true,
-                message: "Succesfuly signe up cookie should be set",
-              });
+            return res.status(200).json({
+              auth: true,
+              message: "Succesfuly signe up cookie should be set",
+            });
           }
         });
       }
@@ -100,11 +143,14 @@ exports.populateProfile = (req, res, next) => {
     const userId = decoded.id;
     userModel.findById(userId, (error, dbResponse) => {
       if (error) return res.json({ auth: false, user: null });
+      const buffer = new Buffer(dbResponse.img.buffer);
+      const imgDebuffered = buffer.toString("base64");
 
       return res.status(200).json({
         userProfile: {
           username: dbResponse.username,
           colors: dbResponse.colors,
+          profileImg: imgDebuffered,
         },
       });
     });

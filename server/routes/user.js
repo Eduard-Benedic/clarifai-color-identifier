@@ -17,4 +17,6 @@ router.put("/color", userController.saveColor);
 router.delete("/color", userController.deleteColor);
 router.get("/logOut", userController.logOut);
 
+router.post("/submitImg", userController.submitImg);
+
 module.exports = router;

@@ -14,6 +14,7 @@ export default new Vuex.Store({
     imageLink: "",
     isAuthenticated: false,
     user: {},
+    imageURL: "",
   },
   getters: {
     profile: (state) => {
@@ -65,6 +66,7 @@ export default new Vuex.Store({
       );
     },
     registerUser({ commit }, { signUpCredentials, router }) {
+      console.log(commit);
       console.log("signUpCrendetials before sent", signUpCredentials);
       fetch(apiEndpoint("user/signup"), {
         method: "POST",
@@ -187,6 +189,22 @@ export default new Vuex.Store({
         .then((data) => {
           const user = data.userProfile;
           commit("POPULATE_PROFILE", { user });
+        });
+    },
+    submitProfileImg({ commit }, { formData }) {
+      fetch("http://localhost:9000/user/submitImg", {
+        method: "POST",
+        body: formData,
+      })
+        .then((resJson) => {
+          return resJson.json();
+        })
+        .then((data) => {
+          console.log("data should contain URL", data);
+          console.log(commit);
+        })
+        .catch((err) => {
+          console.log("error server", err);
         });
     },
   },

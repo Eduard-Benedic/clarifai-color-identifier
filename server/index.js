@@ -3,31 +3,24 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-// const multer = require("multer");
-// const upload = multer({ dest: "uploads/" });
 
 let mongoose = require("mongoose");
 var config = require("./config");
 const PORT = 9000;
 
-//==== ROUTES =====
-
-const userRoutes = require("./routes/user");
-
 app.use(
   cors({
-    origin: "http://localhost:5100",
+    origin: "http://localhost:8080",
     credentials: true,
   })
 );
 
-// res.set("Access-Control-Allow-Credentials", true)
+const userRoutes = require("./routes/user");
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// app.post("/image", upload.single("avatar"), function(req, res, next) {
-//   console.log(req.body);
-// });
+//================== MULTER ==============
 
 app.use("/user", userRoutes);
 
@@ -35,8 +28,8 @@ mongoose.connect(
   config.getDbConnectionString(),
   { useNewUrlParser: true, useUnifiedTopology: true },
   function() {
-    console.log("connected sucesful");
     app.listen(PORT);
+    console.log("connected sucesful");
   }
 );
 mongoose.set("useNewUrlParser", true);
