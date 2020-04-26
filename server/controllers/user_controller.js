@@ -6,15 +6,6 @@ const { check, validationResult } = require("express-validator");
 
 const path = require("path");
 const multer = require("multer");
-// const storage = multer.diskStorage({
-//   destination: "./uploads",
-//   filename: function(req, file, cb) {
-//     cb(
-//       null,
-//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-//     );
-//   },
-// });
 
 const storage = multer.memoryStorage();
 // INIT upload
@@ -27,7 +18,9 @@ exports.submitImg = (req, res, next) => {
     if (err) {
       return res.json({ message: "whatasp" });
     } else {
-      const userId = "5e9fa3f3037d285108cb719b";
+      const cookieToken = req.cookies.token;
+      const userId = jwt.verify(cookieToken, secret()).id;
+
       userModel.findByIdAndUpdate(
         userId,
         { img: req.file.buffer },
@@ -143,6 +136,14 @@ exports.populateProfile = (req, res, next) => {
     const userId = decoded.id;
     userModel.findById(userId, (error, dbResponse) => {
       if (error) return res.json({ auth: false, user: null });
+      if (!dbResponse.img.buffer) {
+        return res.status(200).json({
+          userProfile: {
+            username: dbResponse.username,
+            colors: dbResponse.colors,
+          },
+        });
+      }
       const buffer = new Buffer(dbResponse.img.buffer);
       const imgDebuffered = buffer.toString("base64");
 

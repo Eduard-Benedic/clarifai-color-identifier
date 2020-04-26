@@ -195,6 +195,7 @@ export default new Vuex.Store({
       fetch("http://localhost:9000/user/submitImg", {
         method: "POST",
         body: formData,
+        credentials: "include",
       })
         .then((resJson) => {
           return resJson.json();
