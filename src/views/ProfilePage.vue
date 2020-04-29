@@ -10,7 +10,7 @@
           <p>Down below are your favourite colors:</p>
         </div>
         <div class="flex flex-center" v-if="profile.colors && profile.colors.length > 0">
-          <color-theme-profile v-for="(color, index) in profile.colors" :key="index" :color="color"></color-theme-profile>
+          <color-theme-profile v-for="color in profile.colors" :key="color._id" :color="color"></color-theme-profile>
         </div>
         <p v-else>You have not added any color</p>
       </div>

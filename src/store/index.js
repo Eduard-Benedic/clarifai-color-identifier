@@ -10,11 +10,12 @@ function apiEndpoint(route) {
 
 export default new Vuex.Store({
   state: {
-    theme: [],
     imageLink: "",
+    theme: [],
     isAuthenticated: false,
     user: {},
-    imageURL: "",
+    profileImg: "",
+    binOverview: "",
   },
   getters: {
     profile: (state) => {
@@ -28,11 +29,16 @@ export default new Vuex.Store({
     CHANGE_IMG_LINK(state, payload) {
       state.imageLink = payload;
     },
+    CHANGE_BIN_IMG_LINK(state, { binColorSource }) {
+      state.binOverview = binColorSource;
+    },
     REGISTER_USER(state, payload) {
       console.log(state);
       console.log(payload);
     },
     SET_AUTHENTICATION(state, { auth }) {
+      // ==== NOTE ! VARIABLE SET ON WINDOW BECAUSE I COULDN'T CONNECT
+      // ==== THE STORE AND STATE TOGETHER STRAIGHTFORWARD
       window.is_authenticated = auth;
       state.isAuthenticated = auth;
     },
@@ -42,16 +48,40 @@ export default new Vuex.Store({
     DELETE_COLOR(state, { colors }) {
       state.user.colors = colors;
     },
-    POPULATE_PROFILE(state, { user }) {
-      return (state.user = user);
+    POPULATE_PROFILE(state, { user, profileImg, auth }) {
+      window.is_authenticated = auth;
+      state.user = user;
+      state.profileImg = profileImg;
+    },
+    SET_PROFILE_IMG(state, { img }) {
+      state.profileImg = img;
     },
   },
   actions: {
+    getBinaryColorTheme({ commit }, { binColorSource }) {
+      console.log(commit, "meheh", binColorSource);
+      const app = new Clarifai.App({
+        apiKey: "41450058567c4f9f82e960d1f82f04c8",
+      });
+      const COLOR_MODEL = "eeed0b6733a644cea07cf4c60f87ebb7";
+      // ======= JUST THE WAY CLARIFAI FOR BINARY WANTS TO MAKE THE CALL =============
+      app.models.predict(COLOR_MODEL, { base64: binColorSource }).then(
+        function(response) {
+          commit("CHANGE_BIN_IMG_LINK", { binColorSource });
+          console.log(response);
+        },
+        function(err) {
+          console.log(err);
+        }
+      );
+    },
     getColorTheme(context, payload) {
       const app = new Clarifai.App({
         apiKey: "41450058567c4f9f82e960d1f82f04c8",
       });
       const COLOR_MODEL = "eeed0b6733a644cea07cf4c60f87ebb7";
+      // ======= JUST THE WAY CLARIFAI FOR BINARY WANTS TO MAKE THE CALL =============
+
       app.models.predict(COLOR_MODEL, payload).then(
         function(response) {
           context.commit(
@@ -66,8 +96,6 @@ export default new Vuex.Store({
       );
     },
     registerUser({ commit }, { signUpCredentials, router }) {
-      console.log(commit);
-      console.log("signUpCrendetials before sent", signUpCredentials);
       fetch(apiEndpoint("user/signup"), {
         method: "POST",
         mode: "cors",
@@ -134,8 +162,6 @@ export default new Vuex.Store({
         });
     },
     saveColor({ commit }, payload) {
-      console.log(commit);
-      console.log(payload);
       fetch(apiEndpoint("user/color"), {
         method: "PUT",
         credentials: "include",
@@ -187,8 +213,10 @@ export default new Vuex.Store({
           return response.json();
         })
         .then((data) => {
-          const user = data.userProfile;
-          commit("POPULATE_PROFILE", { user });
+          commit("POPULATE_PROFILE", {
+            user: data.userProfile,
+            profileImg: data.profileImg,
+          });
         });
     },
     submitProfileImg({ commit }, { formData }) {
@@ -201,8 +229,7 @@ export default new Vuex.Store({
           return resJson.json();
         })
         .then((data) => {
-          console.log("data should contain URL", data);
-          console.log(commit);
+          commit("SET_PROFILE_IMG", { img: data.img });
         })
         .catch((err) => {
           console.log("error server", err);

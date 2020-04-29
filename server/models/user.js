@@ -1,4 +1,7 @@
 var mongoose = require("mongoose");
+var fs = require("fs");
+
+let readable = fs.readFileSync(__dirname + "/Unknown_Member.jpg");
 
 var Schema = mongoose.Schema;
 
@@ -11,7 +14,10 @@ var userSchema = new Schema({
       color_name: String,
     },
   ],
-  img: Buffer,
+  img: {
+    type: Buffer,
+    default: readable,
+  },
 });
 
 var user = mongoose.model("user", userSchema);

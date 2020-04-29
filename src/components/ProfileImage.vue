@@ -4,7 +4,7 @@
       <img
         class="profile-picture__img"
         id="img"
-        :src="'data: image/jpeg; base64,' + this.$store.state.user.profileImg"
+        :src="'data: image/jpeg; base64,' + this.$store.state.profileImg"
         alt="whatever"
       />
       <div class="profile-picture__controller">
@@ -64,33 +64,22 @@ export default {
     height: 100%;
     &::after {
       position: absolute;
-      content: "";
-      width: 100%;
-      left: 0;
-      right: 0;
-      height: 100%;
-      background-color: $second-color;
-    }
-
-    &::before {
-      position: absolute;
-      content: "Choose and submit a file";
-      width: 100%;
-      left: 0;
-      right: 0;
-      height: 100%;
-      color: $white;
-      z-index: 2000;
+      content: "Update and save profile image";
       text-align: center;
+      width: 100%;
+      left: 0;
+      right: 0;
+      height: 100%;
       cursor: pointer;
+      background-color: $second-color;
     }
   }
   &__controller {
     position: relative;
   }
   &__img {
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 250px;
     object-fit: cover;
   }
 }

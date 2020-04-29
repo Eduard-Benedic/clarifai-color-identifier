@@ -12,6 +12,7 @@
           <font-awesome-icon :icon="['fa', 'search']" />
         </button>
       </form>
+      <input id="binary" type="file" @change="getBinaryColorTheme" />
     </div>
   </div>
 </template>
@@ -23,8 +24,18 @@ export default {
   methods: {
     fetchTheme($event) {
       const urlStr = $event.target.elements[0].value;
-      console.log("urlStr", urlStr);
+
       this.$store.dispatch("getColorTheme", urlStr);
+    },
+    getBinaryColorTheme() {
+      const input = document.getElementById("binary");
+      const reader = new FileReader();
+
+      reader.readAsBinaryString(input.files[0]);
+      reader.addEventListener("load", () => {
+        let binColorSource = window.btoa(reader.result);
+        this.$store.dispatch("getBinaryColorTheme", { binColorSource });
+      });
     }
   }
 };

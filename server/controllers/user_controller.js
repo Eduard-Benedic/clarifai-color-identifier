@@ -7,10 +7,10 @@ const { check, validationResult } = require("express-validator");
 const path = require("path");
 const multer = require("multer");
 
-const storage = multer.memoryStorage();
+// const storage = multer.memoryStorage();
 // INIT upload
 const upload = multer({
-  storage: storage,
+  // storage: storage,
 }).single("myFile");
 
 exports.submitImg = (req, res, next) => {
@@ -20,21 +20,17 @@ exports.submitImg = (req, res, next) => {
     } else {
       const cookieToken = req.cookies.token;
       const userId = jwt.verify(cookieToken, secret()).id;
-
+      console.log("req.file", req.file);
       userModel.findByIdAndUpdate(
         userId,
         { img: req.file.buffer },
+        { new: true },
         (err, dbResponse) => {
           if (err) return console.log(err);
           else {
-            // console.log(dbResponse);
-            res.setHeader("Content-Type", "image/jpeg");
-
             const buffer = new Buffer(dbResponse.img.buffer);
-
             const img = buffer.toString("base64");
-
-            return res.json({ img });
+            return res.status(200).json({ img });
           }
         }
       );
@@ -136,14 +132,6 @@ exports.populateProfile = (req, res, next) => {
     const userId = decoded.id;
     userModel.findById(userId, (error, dbResponse) => {
       if (error) return res.json({ auth: false, user: null });
-      if (!dbResponse.img.buffer) {
-        return res.status(200).json({
-          userProfile: {
-            username: dbResponse.username,
-            colors: dbResponse.colors,
-          },
-        });
-      }
       const buffer = new Buffer(dbResponse.img.buffer);
       const imgDebuffered = buffer.toString("base64");
 
@@ -151,8 +139,9 @@ exports.populateProfile = (req, res, next) => {
         userProfile: {
           username: dbResponse.username,
           colors: dbResponse.colors,
-          profileImg: imgDebuffered,
         },
+        profileImg: imgDebuffered,
+        auth: true,
       });
     });
   });
@@ -178,25 +167,18 @@ exports.saveColor = (req, res, next) => {
   );
 };
 
-exports.deleteColor = async (req, res, next) => {
+exports.deleteColor = (req, res, next) => {
   const colorHex = req.body.colorHex;
-
   const cookieToken = req.cookies.token;
   const userId = jwt.verify(cookieToken, secret()).id;
 
-  await userModel.findById(userId, (err, dbResponse) => {
-    if (err) return console.log(err);
-    const colorArr = dbResponse.colors;
-    const newColorArr = colorArr.filter((color) => {
-      return colorHex != color.raw_hex;
-    });
-
-    dbResponse.updateOne({ $set: { colors: newColorArr } }, function(e, r) {});
-
-    userModel.findById(userId, (err, dbResponse) => {
+  userModel.findByIdAndUpdate(
+    userId,
+    { $pull: { colors: { raw_hex: colorHex } } },
+    { new: true },
+    (err, dbResponse) => {
       if (err) return console.log(err);
-      console.log(dbResponse);
       return res.status(200).json({ colors: dbResponse.colors });
-    });
-  });
+    }
+  );
 };

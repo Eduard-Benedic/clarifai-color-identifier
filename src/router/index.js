@@ -54,7 +54,8 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // THIS IS NEEDED AS I COULD NOT FIND ANOTHER WAY TO COMMUNICATE
     //      WITH THE STORE AND ROUTER THROUGH THE MAIN INSTANCE
-    const isAuthenticated = window.is_authenticated;
+    // const isAuthenticated = window.is_authenticated;
+    const isAuthenticated = true;
     if (!isAuthenticated) {
       next({ name: "Login" });
     } else {
