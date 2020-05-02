@@ -32,7 +32,6 @@ export default {
       return this.$store.getters.profile;
     }
   },
-
   created() {
     this.$store.dispatch("populateProfile");
   },

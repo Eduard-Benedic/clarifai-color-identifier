@@ -12,10 +12,11 @@ export default new Vuex.Store({
   state: {
     imageLink: "",
     theme: [],
-    isAuthenticated: false,
     user: {},
     profileImg: "",
     binOverview: "",
+    isAuthenticated: null,
+    binaryColorPreview: "",
   },
   getters: {
     profile: (state) => {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    SET_BINARY_COLOR_PREVIEW(state, { binColorSource }) {
+      state.binaryColorPreview = binColorSource;
+    },
     GET_COLOR_THEME(state, payload) {
       state.theme = payload;
     },
@@ -37,10 +41,8 @@ export default new Vuex.Store({
       console.log(payload);
     },
     SET_AUTHENTICATION(state, { auth }) {
-      // ==== NOTE ! VARIABLE SET ON WINDOW BECAUSE I COULDN'T CONNECT
-      // ==== THE STORE AND STATE TOGETHER STRAIGHTFORWARD
       window.is_authenticated = auth;
-      state.isAuthenticated = auth;
+      state.isAuthenticated = window.is_authenticated;
     },
     SAVE_COLOR(state, { colors }) {
       return (state.user.colors = colors);
@@ -59,16 +61,15 @@ export default new Vuex.Store({
   },
   actions: {
     getBinaryColorTheme({ commit }, { binColorSource }) {
-      console.log(commit, "meheh", binColorSource);
+      commit("SET_BINARY_COLOR_PREVIEW", { binColorSource });
       const app = new Clarifai.App({
         apiKey: "41450058567c4f9f82e960d1f82f04c8",
       });
       const COLOR_MODEL = "eeed0b6733a644cea07cf4c60f87ebb7";
-      // ======= JUST THE WAY CLARIFAI FOR BINARY WANTS TO MAKE THE CALL =============
+      // ======= JUST THE WAY CLARIFAI WANTS DATA IN  BINARY =============
       app.models.predict(COLOR_MODEL, { base64: binColorSource }).then(
         function(response) {
-          commit("CHANGE_BIN_IMG_LINK", { binColorSource });
-          console.log(response);
+          commit("GET_COLOR_THEME", response.rawData.outputs[0].data.colors);
         },
         function(err) {
           console.log(err);
@@ -152,12 +153,8 @@ export default new Vuex.Store({
           return jsonRes.json();
         })
         .then((data) => {
-          const dbData = {
-            auth: data.auth,
-            user: data.user,
-          };
           commit("SET_AUTHENTICATION", {
-            auth: dbData.auth,
+            auth: data.auth,
           });
         });
     },
@@ -216,6 +213,7 @@ export default new Vuex.Store({
           commit("POPULATE_PROFILE", {
             user: data.userProfile,
             profileImg: data.profileImg,
+            auth: data.auth,
           });
         });
     },

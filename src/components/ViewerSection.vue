@@ -2,20 +2,11 @@
   <div class="section">
     <div class="wrapper">
       <upload-section></upload-section>
-      <div class="img-preview">
-        <h2 class="img-preview__title">Image preview</h2>
 
-        <img class="img-preview__img" :src="imageLink" alt />
-      </div>
       <div class="flex flex-wrap flex-center pd-tb--lg">
         <color-theme v-for="(color, index) in this.$store.state.theme" :key="index" :color="color"></color-theme>
       </div>
     </div>
-    <img
-      class="img-preview__img"
-      :src="'data: image/jpeg; base64, ' + this.$store.state.binOverview"
-      alt
-    />
   </div>
 </template>
 
@@ -28,11 +19,6 @@ export default {
   components: {
     ColorTheme,
     UploadSection
-  },
-  computed: {
-    imageLink() {
-      return this.$store.state.imageLink;
-    }
   }
 };
 </script>

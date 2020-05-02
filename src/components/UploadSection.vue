@@ -8,7 +8,7 @@
       <form @submit.prevent="fetchTheme($event)">
         <input class="uploader__input" name="themeColor" id="themeColor" type="input" />
         <button class="uploader__btn">
-          Search color composition
+          Search link
           <font-awesome-icon :icon="['fa', 'search']" />
         </button>
       </form>
@@ -20,7 +20,6 @@
 <script>
 export default {
   name: "UploadSection",
-
   methods: {
     fetchTheme($event) {
       const urlStr = $event.target.elements[0].value;
@@ -34,6 +33,7 @@ export default {
       reader.readAsBinaryString(input.files[0]);
       reader.addEventListener("load", () => {
         let binColorSource = window.btoa(reader.result);
+
         this.$store.dispatch("getBinaryColorTheme", { binColorSource });
       });
     }

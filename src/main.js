@@ -9,11 +9,12 @@ import {
   faLink,
   faSearch,
   faCircle,
-  faHeart
+  faHeart,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faLink, faSearch, faCircle, faHeart);
+library.add(faLink, faSearch, faCircle, faHeart, faTrash);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.use(VueClipboard);
@@ -21,7 +22,7 @@ Vue.use(VueClipboard);
 Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
+  render: (h) => h(App),
   router,
-  store
+  store,
 }).$mount("#app");

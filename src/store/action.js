@@ -1,17 +1,35 @@
 import Clarifai from "clarifai";
-import axios from "axios";
 
-function directApi(route) {
+function apiEndpoint(route) {
   const api = "http://localhost:9000";
   return `${api}/${route}`;
 }
 
 module.exports = {
+  getBinaryColorTheme({ commit }, { binColorSource }) {
+    console.log(commit, "meheh", binColorSource);
+    const app = new Clarifai.App({
+      apiKey: "41450058567c4f9f82e960d1f82f04c8",
+    });
+    const COLOR_MODEL = "eeed0b6733a644cea07cf4c60f87ebb7";
+    // ======= JUST THE WAY CLARIFAI WANTS DATA IN  BINARY =============
+    app.models.predict(COLOR_MODEL, { base64: binColorSource }).then(
+      function(response) {
+        commit("CHANGE_BIN_IMG_LINK", { binColorSource });
+        console.log(response);
+      },
+      function(err) {
+        console.log(err);
+      }
+    );
+  },
   getColorTheme(context, payload) {
     const app = new Clarifai.App({
       apiKey: "41450058567c4f9f82e960d1f82f04c8",
     });
     const COLOR_MODEL = "eeed0b6733a644cea07cf4c60f87ebb7";
+    // ======= JUST THE WAY CLARIFAI FOR BINARY WANTS TO MAKE THE CALL =============
+
     app.models.predict(COLOR_MODEL, payload).then(
       function(response) {
         context.commit(
@@ -25,36 +43,48 @@ module.exports = {
       }
     );
   },
-  registerUser({ commit }, payload) {
-    axios
-      .post(directApi("user"), payload)
-      .then((response) => {
-        localStorage.setItem("user", JSON.stringify(response.data[0].user));
-        localStorage.setItem("jwt", response.data.token);
-
-        if (localStorage.getItem("jwt") != null) {
-          this.$emit("loggedIn");
-          if (this.$route.params.nextUrl != null) {
-            this.$router.push(this.$route.params.nextUrl);
-          } else {
-            this.$router.push("/");
-          }
-        }
+  registerUser({ commit }, { signUpCredentials, router }) {
+    fetch(apiEndpoint("user/signup"), {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      body: JSON.stringify(signUpCredentials),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((jsonRes) => {
+        return jsonRes.json();
       })
-      .catch(function(error) {
-        console.log(error);
+      .then((res) => {
+        console.log(res);
+
+        commit("SET_AUTHENTICATION", { auth: res.auth });
+        router.push({ name: "ProfilePage" });
+      })
+      .catch((err) => {
+        return console.log(err);
       });
-    commit("REGISTER_USER", payload);
   },
   verifyAuthentication({ commit }, { credentials, router }) {
-    axios
-      .post(directApi("user/login"), credentials)
+    fetch(apiEndpoint("user/login"), {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+      mode: "cors",
+    })
+      .then((initialRes) => {
+        return initialRes.json();
+      })
       .then((res) => {
-        const user = res.data.user;
-        const auth = res.data.auth;
-        document.cookie = `token = ${res.data.token}`;
+        const auth = res.auth;
         if (auth) {
-          commit("VERIFY_AUTHENTICATION", { user, auth });
+          commit("SET_AUTHENTICATION", { auth });
           router.push({ name: "ProfilePage" });
         } else {
           console.log("Authentication failed");
@@ -62,10 +92,21 @@ module.exports = {
       })
       .catch((err) => console.log(err));
   },
+  logOut({ commit }) {
+    fetch(apiEndpoint("user/logOut"), {
+      credentials: "include",
+    })
+      .then((jsonRes) => {
+        return jsonRes.json();
+      })
+      .then((data) => {
+        commit("SET_AUTHENTICATION", {
+          auth: data.auth,
+        });
+      });
+  },
   saveColor({ commit }, payload) {
-    console.log(commit);
-    console.log(payload);
-    fetch(directApi("user/color"), {
+    fetch(apiEndpoint("user/color"), {
       method: "PUT",
       credentials: "include",
       mode: "cors",
@@ -82,18 +123,19 @@ module.exports = {
         return commit("SAVE_COLOR", { colors: data });
       });
   },
-  deleteColor({ commit }, { colorName, colorHex }) {
-    fetch(directApi("user/color"), {
+  deleteColor({ commit }, { colorHex }) {
+    fetch(apiEndpoint("user/color"), {
       method: "delete",
       credentials: "include",
       mode: "cors",
-      body: JSON.stringify({ colorName, colorHex }),
+      body: JSON.stringify({ colorHex }),
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
     })
       .then((res) => {
+        console.log("res in delete request");
         return res.json();
       })
       .then((data) => {
@@ -101,8 +143,8 @@ module.exports = {
         return commit("DELETE_COLOR", { colors: data.colors });
       });
   },
-  populateProfile({ commit }, { token }) {
-    fetch(directApi("user/profile"), {
+  populateProfile({ commit }) {
+    fetch(apiEndpoint("user/profile"), {
       method: "GET",
       credentials: "include",
       mode: "cors",
@@ -112,14 +154,30 @@ module.exports = {
       },
     })
       .then((response) => {
-        console.log(token);
-        console.log("=========================================");
-        console.log(response);
         return response.json();
       })
       .then((data) => {
-        const user = data.userProfile;
-        commit("POPULATE_PROFILE", { user });
+        commit("POPULATE_PROFILE", {
+          user: data.userProfile,
+          profileImg: data.profileImg,
+          auth: data.auth,
+        });
+      });
+  },
+  submitProfileImg({ commit }, { formData }) {
+    fetch("http://localhost:9000/user/submitImg", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    })
+      .then((resJson) => {
+        return resJson.json();
+      })
+      .then((data) => {
+        commit("SET_PROFILE_IMG", { img: data.img });
+      })
+      .catch((err) => {
+        console.log("error server", err);
       });
   },
 };
