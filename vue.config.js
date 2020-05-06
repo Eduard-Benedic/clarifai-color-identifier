@@ -1,11 +1,11 @@
 module.exports = {
-  chainWebpack: (config) => {
-    // remove the prefetch plugin
-    config.plugins.delete("prefetch");
-  },
-  devServer: {
-    proxy: "http://localhost:9000",
-  },
+  // chainWebpack: (config) => {
+  //   // remove the prefetch plugin
+  //   config.plugins.delete("prefetch");
+  // },
+  // devServer: {
+  //   proxy: "http://localhost:9000",
+  // },
   chainWebpack: (config) => {
     config.module
       .rule("pdf")
