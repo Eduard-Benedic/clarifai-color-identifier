@@ -8,10 +8,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "nf start",
-    "frontend": "npm run serve",
-    "backend": "nodemon server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./server/index.js"
   },
   "main": "index.js",
   "dependencies": {

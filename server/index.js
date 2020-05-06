@@ -7,7 +7,11 @@ const path = require("path");
 
 let mongoose = require("mongoose");
 var config = require("./config");
-const PORT = process.env.PORT || 9000;
+let port = process.env.PORT;
+
+if (port == null || port == "") {
+  port = 9000;
+}
 
 app.use(express.static(path.resolve("../dist/")));
 
@@ -31,7 +35,7 @@ mongoose.connect(
   config.getDbConnectionString(),
   { useNewUrlParser: true, useUnifiedTopology: true },
   function() {
-    app.listen(PORT);
+    app.listen(port);
     console.log("connected sucesful");
   }
 );
