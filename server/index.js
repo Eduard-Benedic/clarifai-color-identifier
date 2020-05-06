@@ -7,7 +7,7 @@ const path = require("path");
 
 let mongoose = require("mongoose");
 var config = require("./config");
-const PORT = 9000;
+const PORT = process.env.PORT || 9000;
 
 app.use(express.static(path.resolve("../dist/")));
 
