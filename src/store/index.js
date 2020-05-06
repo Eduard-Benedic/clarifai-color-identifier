@@ -4,8 +4,8 @@ import Clarifai from "clarifai";
 
 Vue.use(Vuex);
 function apiEndpoint(route) {
-  const api = "http://localhost:9000";
-  return `${api}/${route}`;
+  const host = "http://localhost:9000";
+  return `${host}/api/${route}`;
 }
 
 export default new Vuex.Store({
@@ -188,11 +188,9 @@ export default new Vuex.Store({
         },
       })
         .then((res) => {
-          console.log("res in delete request");
           return res.json();
         })
         .then((data) => {
-          console.log("Delete Color", data);
           return commit("DELETE_COLOR", { colors: data.colors });
         });
     },
@@ -201,10 +199,6 @@ export default new Vuex.Store({
         method: "GET",
         credentials: "include",
         mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
       })
         .then((response) => {
           return response.json();
@@ -218,7 +212,7 @@ export default new Vuex.Store({
         });
     },
     submitProfileImg({ commit }, { formData }) {
-      fetch("http://localhost:9000/user/submitImg", {
+      fetch(apiEndpoint("user/submitImg"), {
         method: "POST",
         body: formData,
         credentials: "include",

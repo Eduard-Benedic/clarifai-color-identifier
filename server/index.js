@@ -3,14 +3,17 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 let mongoose = require("mongoose");
 var config = require("./config");
 const PORT = 9000;
 
+app.use(express.static(path.resolve("../dist/")));
+
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    // origin: "http://localhost:8080",
     credentials: true,
   })
 );
@@ -22,7 +25,7 @@ app.use(cookieParser());
 
 //================== MULTER ==============
 
-app.use("/user", userRoutes);
+app.use("/api/user", userRoutes);
 
 mongoose.connect(
   config.getDbConnectionString(),

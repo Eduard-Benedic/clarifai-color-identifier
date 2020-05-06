@@ -1,8 +1,12 @@
 module.exports = {
-  devServer: {
-    proxy: "http://localhost:9000"
+  chainWebpack: (config) => {
+    // remove the prefetch plugin
+    config.plugins.delete("prefetch");
   },
-  chainWebpack: config => {
+  devServer: {
+    proxy: "http://localhost:9000",
+  },
+  chainWebpack: (config) => {
     config.module
       .rule("pdf")
       .test(/\.pdf$/)
@@ -22,9 +26,9 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `@import "@/assets/stylesheets/scss/global.scss";`
-      }
-    }
+        prependData: `@import "@/assets/stylesheets/scss/global.scss";`,
+      },
+    },
   },
-  publicPath: process.env.NODE_ENV === "production" ? "./" : "/"
+  // publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
 };

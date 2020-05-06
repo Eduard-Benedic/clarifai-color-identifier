@@ -1,7 +1,6 @@
 const userModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const secret = require("../config/index").getSecret;
 const { check, validationResult } = require("express-validator");
 
 const path = require("path");
@@ -19,7 +18,7 @@ exports.submitImg = (req, res, next) => {
       return res.json({ message: "whatasp" });
     } else {
       const cookieToken = req.cookies.token;
-      const userId = jwt.verify(cookieToken, secret()).id;
+      const userId = jwt.verify(cookieToken, process.env.JWT_SECRET).id;
       console.log("req.file", req.file);
       userModel.findByIdAndUpdate(
         userId,
@@ -93,7 +92,7 @@ exports.logIn = (req, res, next) => {
         msg: "Authentication failed, try again",
       });
     } else {
-      const token = jwt.sign({ id: user._id }, secret(), {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: 60 * 60, // expires in 1 hour
       });
 
@@ -108,13 +107,13 @@ exports.logIn = (req, res, next) => {
 exports.logOut = (req, res, next) => {
   const cookieToken = req.cookies.token;
 
-  const userId = jwt.verify(cookieToken, secret()).id;
+  const userId = jwt.verify(cookieToken, process.env.JWT_SECRET).id;
   const token = jwt.sign(
     {
       id: userId,
       exp: Math.floor(Date.now() / 1000) - 500,
     },
-    secret()
+    process.env.JWT_SECRET
   );
   res.clearCookie("token", { path: "/" });
   res.cookie("token", token, { path: "/" });
@@ -124,7 +123,7 @@ exports.logOut = (req, res, next) => {
 exports.populateProfile = (req, res, next) => {
   const cookieToken = req.cookies.token;
 
-  jwt.verify(cookieToken, secret(), (err, decoded) => {
+  jwt.verify(cookieToken, process.env.JWT_SECRET, (err, decoded) => {
     if (err)
       return res.json({
         userProfile: { username: null, colors: null },
@@ -149,7 +148,7 @@ exports.populateProfile = (req, res, next) => {
 
 exports.saveColor = (req, res, next) => {
   const cookieToken = req.cookies.token;
-  const userId = jwt.verify(cookieToken, secret()).id;
+  const userId = jwt.verify(cookieToken, process.env.JWT_SECRET).id;
   const colorTheme = {
     raw_hex: req.body.payload.raw_hex,
     color_name: req.body.payload.color_name,
@@ -170,7 +169,7 @@ exports.saveColor = (req, res, next) => {
 exports.deleteColor = (req, res, next) => {
   const colorHex = req.body.colorHex;
   const cookieToken = req.cookies.token;
-  const userId = jwt.verify(cookieToken, secret()).id;
+  const userId = jwt.verify(cookieToken, process.env.JWT_SECRET).id;
 
   userModel.findByIdAndUpdate(
     userId,
