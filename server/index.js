@@ -29,6 +29,9 @@ app.use(cookieParser());
 
 //================== MULTER ==============
 
+app.get("/", (req, res, next) => {
+  res.sendFile("index.html", { root: path.join(__dirname, "../dist") });
+});
 app.use("/api/user", userRoutes);
 
 mongoose.connect(
